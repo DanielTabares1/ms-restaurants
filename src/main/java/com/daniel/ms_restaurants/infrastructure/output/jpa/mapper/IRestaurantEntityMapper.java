@@ -5,5 +5,5 @@ import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.RestaurantEnti
 
 public interface IRestaurantEntityMapper {
     RestaurantEntity toEntity(Restaurant restaurant);
-    Restaurant toRestaurant(RestaurantEntity restaurantEntity);
+    Restaurant toModel(RestaurantEntity restaurantEntity);
 }

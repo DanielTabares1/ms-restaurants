@@ -14,18 +14,18 @@ public class RestaurantEntityMapper implements IRestaurantEntityMapper{
         }
 
         return new RestaurantEntity(
-                restaurant.getId(),
-                restaurant.getName(),
-                restaurant.getAddress(),
-                restaurant.getOwnerId(),
-                restaurant.getPhoneNumber(),
-                restaurant.getLogoUrl(),
-                restaurant.getNit()
+                    restaurant.getId(),
+                    restaurant.getName(),
+                    restaurant.getAddress(),
+                    restaurant.getOwnerId(),
+                    restaurant.getPhoneNumber(),
+                    restaurant.getLogoUrl(),
+                    restaurant.getNit()
         );
     }
 
     @Override
-    public Restaurant toRestaurant(RestaurantEntity restaurantEntity) {
+    public Restaurant toModel(RestaurantEntity restaurantEntity) {
         if (restaurantEntity == null){
             return null;
         }

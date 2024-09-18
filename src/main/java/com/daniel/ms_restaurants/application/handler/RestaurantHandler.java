@@ -1,7 +1,7 @@
 package com.daniel.ms_restaurants.application.handler;
 
 import com.daniel.ms_restaurants.application.exception.OwnerNotFoundException;
-import com.daniel.ms_restaurants.domain.api.RestaurantServicePort;
+import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.domain.model.UserResponse;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 public class RestaurantHandler implements IRestaurantHandler{
-    private final RestaurantServicePort restaurantServicePort;
+    private final IRestaurantServicePort restaurantServicePort;
     private final UserFeignClient userFeignClient;
 
     @Override

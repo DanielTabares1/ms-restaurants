@@ -1,7 +1,7 @@
 package com.daniel.ms_restaurants.application.handler;
 
 import com.daniel.ms_restaurants.application.exception.OwnerNotFoundException;
-import com.daniel.ms_restaurants.domain.api.RestaurantServicePort;
+import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.domain.model.RoleResponse;
 import com.daniel.ms_restaurants.domain.model.UserResponse;
@@ -23,7 +23,7 @@ class RestaurantHandlerTest {
     private RestaurantHandler restaurantHandler;
 
     @Mock
-    private RestaurantServicePort restaurantServicePort;
+    private IRestaurantServicePort IRestaurantServicePort;
 
     @Mock
     private UserFeignClient userFeignClient;
@@ -52,7 +52,7 @@ class RestaurantHandlerTest {
         when(userFeignClient.getUserById(restaurant.getOwnerId())).thenReturn(owner);
 
         // Simula el comportamiento del servicio
-        when(restaurantServicePort.saveRestaurant(any(Restaurant.class))).thenReturn(restaurant);
+        when(IRestaurantServicePort.saveRestaurant(any(Restaurant.class))).thenReturn(restaurant);
 
         // Act: Llama al método bajo prueba
         Restaurant result = restaurantHandler.saveRestaurant(restaurant);
@@ -69,7 +69,7 @@ class RestaurantHandlerTest {
 
         // Verifica que los métodos de los mocks fueron llamados correctamente
         verify(userFeignClient, times(1)).getUserById(restaurant.getOwnerId());
-        verify(restaurantServicePort, times(1)).saveRestaurant(any(Restaurant.class));
+        verify(IRestaurantServicePort, times(1)).saveRestaurant(any(Restaurant.class));
     }
 
     @Test
@@ -96,7 +96,7 @@ class RestaurantHandlerTest {
         // Verifica que el método de FeignClient fue llamado
         verify(userFeignClient, times(1)).getUserById(restaurant.getOwnerId());
         // Verifica que el servicio no fue llamado
-        verify(restaurantServicePort, times(0)).saveRestaurant(any(Restaurant.class));
+        verify(IRestaurantServicePort, times(0)).saveRestaurant(any(Restaurant.class));
     }
 
     @Test
@@ -126,7 +126,7 @@ class RestaurantHandlerTest {
         // Verifica que el método de FeignClient fue llamado
         verify(userFeignClient, times(1)).getUserById(restaurant.getOwnerId());
         // Verifica que el servicio no fue llamado
-        verify(restaurantServicePort, times(0)).saveRestaurant(any(Restaurant.class));
+        verify(IRestaurantServicePort, times(0)).saveRestaurant(any(Restaurant.class));
     }
 
 
