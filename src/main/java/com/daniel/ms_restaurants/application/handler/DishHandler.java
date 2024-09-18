@@ -1,6 +1,7 @@
 package com.daniel.ms_restaurants.application.handler;
 
 import com.daniel.ms_restaurants.application.dto.CreateDishRequest;
+import com.daniel.ms_restaurants.application.dto.EditDishRequest;
 import com.daniel.ms_restaurants.application.mapper.IDishRequestMapper;
 import com.daniel.ms_restaurants.domain.api.ICategoryServicePort;
 import com.daniel.ms_restaurants.domain.api.IDishServicePort;
@@ -31,5 +32,13 @@ public class DishHandler implements IDishHandler{
         Restaurant restaurant = restaurantServicePort.getRestaurantById(1);
         dish.setRestaurant(restaurant);
         return dishServicePort.createDish(dish);
+    }
+
+    @Override
+    public Dish editDish(long dishId, EditDishRequest dishRequest) {
+        Dish originalDish = dishServicePort.getDishById(dishId);
+        originalDish.setPrice(dishRequest.getPrice());
+        originalDish.setDescription(dishRequest.getDescription());
+        return dishServicePort.editDish(dishId, originalDish);
     }
 }

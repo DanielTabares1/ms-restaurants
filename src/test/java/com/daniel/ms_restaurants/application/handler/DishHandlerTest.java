@@ -1,6 +1,7 @@
 package com.daniel.ms_restaurants.application.handler;
 
 import com.daniel.ms_restaurants.application.dto.CreateDishRequest;
+import com.daniel.ms_restaurants.application.dto.EditDishRequest;
 import com.daniel.ms_restaurants.application.mapper.IDishRequestMapper;
 import com.daniel.ms_restaurants.domain.api.ICategoryServicePort;
 import com.daniel.ms_restaurants.domain.api.IDishServicePort;
@@ -9,6 +10,7 @@ import com.daniel.ms_restaurants.domain.model.Category;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.infrastructure.exception.CategoryNotFoundException;
+import com.daniel.ms_restaurants.infrastructure.exception.DishNotFoundException;
 import com.daniel.ms_restaurants.infrastructure.exception.RestaurantNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -103,6 +105,53 @@ class DishHandlerTest {
         assertThrows(RestaurantNotFoundException.class, () -> dishHandler.saveDish(request));
         verify(restaurantServicePort, times(1)).getRestaurantById(1L);
         verify(dishServicePort, times(0)).createDish(any(Dish.class));  // Ensure this is never called
+    }
+
+    @Test
+    void editDishSuccess() {
+        // Given
+        long dishId = 1L;
+        EditDishRequest request = new EditDishRequest();
+        request.setPrice(150);
+        request.setDescription("Updated description");
+
+        Dish originalDish = new Dish();
+        originalDish.setId(dishId);
+        originalDish.setPrice(100);
+        originalDish.setDescription("Original description");
+
+        // Mock the behavior of getting and editing the dish
+        when(dishServicePort.getDishById(dishId)).thenReturn(originalDish);
+        when(dishServicePort.editDish(dishId, originalDish)).thenReturn(originalDish);
+
+        // When
+        Dish editedDish = dishHandler.editDish(dishId, request);
+
+        // Then
+        assertNotNull(editedDish);
+        assertEquals(150, editedDish.getPrice());
+        assertEquals("Updated description", editedDish.getDescription());
+
+        verify(dishServicePort, times(1)).getDishById(dishId);
+        verify(dishServicePort, times(1)).editDish(dishId, originalDish);
+    }
+
+    @Test
+    void editDishWhenDishNotFound() {
+        // Given
+        long dishId = 1L;
+        EditDishRequest request = new EditDishRequest();
+        request.setPrice(150);
+        request.setDescription("Updated description");
+
+        // Mock the behavior of dish not being found
+        when(dishServicePort.getDishById(dishId)).thenThrow(new DishNotFoundException("Dish not found"));
+
+        // When & Then
+        assertThrows(DishNotFoundException.class, () -> dishHandler.editDish(dishId, request));
+
+        verify(dishServicePort, times(1)).getDishById(dishId);
+        verify(dishServicePort, times(0)).editDish(anyLong(), any(Dish.class));  // Ensure editDish is never called
     }
 
 }

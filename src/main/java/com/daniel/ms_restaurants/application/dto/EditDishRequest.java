@@ -12,9 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateDishRequest {
-    @NotBlank(message = "Dish name cannot be blank")
-    private String name;
+public class EditDishRequest {
 
     @NotNull(message = "Dish price cannot be null")
     @Positive(message = "Dish price must be greater than zero")
@@ -22,10 +20,4 @@ public class CreateDishRequest {
 
     @NotBlank(message = "Dish description cannot be blank")
     private String description;
-
-    @NotBlank(message = "Image URL cannot be blank")
-    private String imageUrl;
-
-    @NotNull(message = "Category ID cannot be null")
-    private Long idCategory;
 }
