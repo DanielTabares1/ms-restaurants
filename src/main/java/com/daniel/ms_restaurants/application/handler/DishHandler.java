@@ -2,6 +2,7 @@ package com.daniel.ms_restaurants.application.handler;
 
 import com.daniel.ms_restaurants.application.dto.CreateDishRequest;
 import com.daniel.ms_restaurants.application.dto.EditDishRequest;
+import com.daniel.ms_restaurants.application.dto.ToggleActivationToDishRequest;
 import com.daniel.ms_restaurants.application.mapper.IDishRequestMapper;
 import com.daniel.ms_restaurants.domain.api.ICategoryServicePort;
 import com.daniel.ms_restaurants.domain.api.IDishServicePort;
@@ -9,9 +10,9 @@ import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.model.Category;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -40,5 +41,13 @@ public class DishHandler implements IDishHandler{
         originalDish.setPrice(dishRequest.getPrice());
         originalDish.setDescription(dishRequest.getDescription());
         return dishServicePort.editDish(dishId, originalDish);
+    }
+
+    @Override
+    public Dish toggleActivation(long dishId, ToggleActivationToDishRequest req) {
+       Dish originalDish = dishServicePort.getDishById(dishId);
+       //todo - validate owner based on Authentication with database
+       originalDish.setActive(req.isActivate());
+       return dishServicePort.editDish(dishId, originalDish);
     }
 }
