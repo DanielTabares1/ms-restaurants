@@ -1,6 +1,7 @@
 package com.daniel.ms_restaurants.application.handler;
 
 import com.daniel.ms_restaurants.application.exception.OwnerNotFoundException;
+import com.daniel.ms_restaurants.application.handler.impl.RestaurantHandler;
 import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.domain.model.RoleResponse;

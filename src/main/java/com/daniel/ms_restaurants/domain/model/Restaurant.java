@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 public class Restaurant {
 
-    private long id;
+    private Long id;
 
     @NotBlank
     @Size(min = 1, message = "Restaurant name could ha")
@@ -43,6 +43,14 @@ public class Restaurant {
         this.nit = nit;
     }
 
+    public Restaurant(String address, String name, long ownerId, String phoneNumber, String logoUrl, String nit) {
+        this.address = address;
+        this.name = name;
+        this.ownerId = ownerId;
+        this.phoneNumber = phoneNumber;
+        this.logoUrl = logoUrl;
+        this.nit = nit;
+    }
 
     public long getId() {
         return id;

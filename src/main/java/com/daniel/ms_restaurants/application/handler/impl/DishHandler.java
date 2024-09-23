@@ -1,8 +1,9 @@
-package com.daniel.ms_restaurants.application.handler;
+package com.daniel.ms_restaurants.application.handler.impl;
 
 import com.daniel.ms_restaurants.application.dto.CreateDishRequest;
 import com.daniel.ms_restaurants.application.dto.EditDishRequest;
 import com.daniel.ms_restaurants.application.dto.ToggleActivationToDishRequest;
+import com.daniel.ms_restaurants.application.handler.IDishHandler;
 import com.daniel.ms_restaurants.application.mapper.IDishRequestMapper;
 import com.daniel.ms_restaurants.domain.api.ICategoryServicePort;
 import com.daniel.ms_restaurants.domain.api.IDishServicePort;
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DishHandler implements IDishHandler{
+public class DishHandler implements IDishHandler {
 
     private final IDishServicePort dishServicePort;
     private final IDishRequestMapper dishRequestMapper;

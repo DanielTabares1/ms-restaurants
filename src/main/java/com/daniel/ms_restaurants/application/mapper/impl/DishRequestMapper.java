@@ -1,11 +1,12 @@
-package com.daniel.ms_restaurants.application.mapper;
+package com.daniel.ms_restaurants.application.mapper.impl;
 
 import com.daniel.ms_restaurants.application.dto.CreateDishRequest;
+import com.daniel.ms_restaurants.application.mapper.IDishRequestMapper;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DishRequestMapper implements IDishRequestMapper{
+public class DishRequestMapper implements IDishRequestMapper {
     @Override
     public Dish toModel(CreateDishRequest dishRequest) {
         if (dishRequest == null){

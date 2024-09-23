@@ -2,6 +2,7 @@ package com.daniel.ms_restaurants.application.handler;
 
 import com.daniel.ms_restaurants.application.dto.CreateDishRequest;
 import com.daniel.ms_restaurants.application.dto.EditDishRequest;
+import com.daniel.ms_restaurants.application.handler.impl.DishHandler;
 import com.daniel.ms_restaurants.application.mapper.IDishRequestMapper;
 import com.daniel.ms_restaurants.domain.api.ICategoryServicePort;
 import com.daniel.ms_restaurants.domain.api.IDishServicePort;

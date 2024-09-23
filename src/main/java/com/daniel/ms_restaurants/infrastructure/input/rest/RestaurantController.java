@@ -1,5 +1,6 @@
 package com.daniel.ms_restaurants.infrastructure.input.rest;
 
+import com.daniel.ms_restaurants.application.dto.CreateRestaurantRequest;
 import com.daniel.ms_restaurants.application.dto.RestaurantResponse;
 import com.daniel.ms_restaurants.application.handler.IRestaurantHandler;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
@@ -29,8 +30,8 @@ public class RestaurantController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<Restaurant> addNewRestaurant(@RequestBody Restaurant restaurant){
-        Restaurant createdRestaurant = restaurantHandler.saveRestaurant(restaurant);
+    public ResponseEntity<Restaurant> addNewRestaurant(@RequestBody CreateRestaurantRequest request){
+        Restaurant createdRestaurant = restaurantHandler.saveRestaurant(request);
         return new ResponseEntity<>(createdRestaurant, HttpStatus.CREATED);
     }
 
