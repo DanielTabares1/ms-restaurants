@@ -7,6 +7,12 @@ import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.RestaurantEnti
 import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IRestaurantEntityMapper;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class RestaurantJpaAdapter implements RestaurantPersistencePort {
@@ -27,5 +33,16 @@ public class RestaurantJpaAdapter implements RestaurantPersistencePort {
                 () -> new RestaurantNotFoundException("Restaurant not found with id " + id)
         );
         return restaurantEntityMapper.toModel(restaurantEntity);
+    }
+
+    @Override
+    public List<Restaurant> getAllRestaurants(int pageNumber, int pageSize) {
+        Sort sort = Sort.by("name").ascending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<Restaurant> restaurants = restaurantRepository.findAll(pageable)
+                .map(restaurantEntityMapper::toModel);
+
+       return restaurants.stream().toList();
     }
 }
