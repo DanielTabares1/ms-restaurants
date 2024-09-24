@@ -24,19 +24,38 @@ public class ClientController {
     private final IDishResponseMapper dishResponseMapper;
 
     @GetMapping("/dishes/{restaurantId}")
-    public RestaurantMenuResponse getAllDishesByRestaurantId(@PathVariable long restaurantId){
-        List<Dish> dishes = dishHandler.getAllDishesByRestaurantId(restaurantId);
+    public RestaurantMenuResponse getAllDishesByRestaurantId(
+            @PathVariable long restaurantId,
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        List<Dish> dishes = dishHandler.getAllDishesByRestaurantId(restaurantId, pageNumber, pageSize);
         Restaurant restaurant = restaurantHandler.getRestaurantById(restaurantId);
         return new RestaurantMenuResponse(restaurant, dishes.stream().map(
                 dishResponseMapper::toDishResponse
         ).toList());
     }
 
+    @GetMapping("/dishes/by-restaurant/by-category")
+    public RestaurantMenuResponse getAllDishesByRestaurantIdByCategoryId(
+            @RequestParam(value = "restaurantId", defaultValue = "1", required = false) long restaurantId,
+            @RequestParam(value = "categoryId", defaultValue = "1", required = false) long categoryId,
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        List<Dish> dishes = dishHandler.getAllDishesByRestaurantIdByCategoryId(restaurantId, categoryId, pageNumber, pageSize);
+        Restaurant restaurant = restaurantHandler.getRestaurantById(restaurantId);
+        return new RestaurantMenuResponse(restaurant, dishes.stream().map(
+                dishResponseMapper::toDishResponse
+        ).toList());
+    }
+
+
     @GetMapping("/client/restaurant")
     public ResponseEntity<List<RestaurantResponse>> getAllRestaurants(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
-    ){
+    ) {
         List<RestaurantResponse> restaurants = restaurantHandler.getAllRestaurants(pageNumber, pageSize);
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }

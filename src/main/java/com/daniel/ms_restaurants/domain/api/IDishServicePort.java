@@ -6,7 +6,12 @@ import java.util.List;
 
 public interface IDishServicePort {
     Dish createDish(Dish dish);
+
     Dish editDish(long dishId, Dish editedDish);
+
     Dish getDishById(long id);
-    List<Dish> findAllDishesByRestaurantId(long restaurantId);
+
+    List<Dish> findAllDishesByRestaurantId(long restaurantId, int pageNumber, int pageSize);
+
+    List<Dish> findAllDishesByRestaurantIdByCategoryId(long restaurantId, long categoryId, int pageNumber, int pageSize);
 }

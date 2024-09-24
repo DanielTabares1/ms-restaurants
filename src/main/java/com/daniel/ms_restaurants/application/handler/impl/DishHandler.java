@@ -38,7 +38,7 @@ public class DishHandler implements IDishHandler {
     public Dish saveDish(CreateDishRequest dishRequest) {
         Restaurant restaurant = restaurantServicePort.getRestaurantById(dishRequest.getIdRestaurant());
 
-        if(!userIsOwnerOfRestaurant(restaurant)){
+        if (!userIsOwnerOfRestaurant(restaurant)) {
             throw new UserNotOwnerOfRestaurantException("Authenticated user is not the owner of the restaurant with id: " + dishRequest.getIdRestaurant());
         }
 
@@ -83,8 +83,12 @@ public class DishHandler implements IDishHandler {
     }
 
     @Override
-    public List<Dish> getAllDishesByRestaurantId(long restaurantId) {
-        //todo - validate client based on authentication with database
-        return dishServicePort.findAllDishesByRestaurantId(restaurantId);
+    public List<Dish> getAllDishesByRestaurantId(long restaurantId, int pageNumber, int pageSize) {
+        return dishServicePort.findAllDishesByRestaurantId(restaurantId, pageNumber, pageSize);
+    }
+
+    @Override
+    public List<Dish> getAllDishesByRestaurantIdByCategoryId(long restaurantId, long categoryId, int pageNumber, int pageSize) {
+        return dishServicePort.findAllDishesByRestaurantIdByCategoryId(restaurantId, categoryId, pageNumber, pageSize);
     }
 }

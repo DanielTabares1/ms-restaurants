@@ -9,7 +9,12 @@ import java.util.List;
 
 public interface IDishHandler {
     Dish saveDish(CreateDishRequest dishRequest);
+
     Dish editDish(long dishId, EditDishRequest dishRequest);
+
     Dish toggleActivation(long dishId, ToggleActivationToDishRequest req);
-    List<Dish> getAllDishesByRestaurantId(long restaurantId);
+
+    List<Dish> getAllDishesByRestaurantId(long restaurantId, int pageNumber, int pageSize);
+
+    List<Dish> getAllDishesByRestaurantIdByCategoryId(long restaurantId, long categoryId, int pageNumber, int pageSize);
 }

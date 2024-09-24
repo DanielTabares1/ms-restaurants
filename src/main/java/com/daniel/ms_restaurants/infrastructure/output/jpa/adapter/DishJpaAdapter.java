@@ -7,6 +7,10 @@ import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.DishEntity;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IDishEntityMapper;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IDishRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -39,8 +43,22 @@ public class DishJpaAdapter implements IDishPersistencePort {
     }
 
     @Override
-    public List<Dish> getAllDishesByRestaurantId(long restaurantId) {
-        List<DishEntity> dishEntityList = dishRepository.findAllByRestaurantId(restaurantId);
+    public List<Dish> getAllDishesByRestaurantId(long restaurantId, int pageNumber, int pageSize) {
+
+        Sort sort = Sort.by("category").ascending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<DishEntity> dishEntityList = dishRepository.findAllByRestaurantId(restaurantId, pageable);
+        return dishEntityList.stream().map(
+                dishEntityMapper::toModel
+        ).toList();
+    }
+
+    @Override
+    public List<Dish> getAllDishesByRestaurantIdByCategoryId(long restaurantId, long categoryId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<DishEntity> dishEntityList = dishRepository.findAllByRestaurantIdAndCategoryId(restaurantId, categoryId, pageable);
         return dishEntityList.stream().map(
                 dishEntityMapper::toModel
         ).toList();
