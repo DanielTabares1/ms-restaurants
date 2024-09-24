@@ -14,6 +14,6 @@ public enum UserRoles {
 
     @Override
     public String toString() {
-        return roleName;
+        return this.roleName;
     }
 }

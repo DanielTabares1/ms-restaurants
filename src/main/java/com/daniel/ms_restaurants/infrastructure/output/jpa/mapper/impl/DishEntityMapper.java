@@ -1,4 +1,4 @@
-package com.daniel.ms_restaurants.infrastructure.output.jpa.mapper;
+package com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.impl;
 
 import com.daniel.ms_restaurants.domain.model.Category;
 import com.daniel.ms_restaurants.domain.model.Dish;
@@ -6,10 +6,11 @@ import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.CategoryEntity;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.DishEntity;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.RestaurantEntity;
+import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IDishEntityMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DishEntityMapper implements IDishEntityMapper{
+public class DishEntityMapper implements IDishEntityMapper {
     @Override
     public Dish toModel(DishEntity dishEntity) {
 

@@ -1,11 +1,12 @@
-package com.daniel.ms_restaurants.infrastructure.output.jpa.mapper;
+package com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.impl;
 
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.RestaurantEntity;
+import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IRestaurantEntityMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RestaurantEntityMapper implements IRestaurantEntityMapper{
+public class RestaurantEntityMapper implements IRestaurantEntityMapper {
     @Override
     public RestaurantEntity toEntity(Restaurant restaurant) {
 

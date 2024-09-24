@@ -1,11 +1,12 @@
-package com.daniel.ms_restaurants.infrastructure.output.jpa.mapper;
+package com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.impl;
 
 import com.daniel.ms_restaurants.domain.model.Category;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.CategoryEntity;
+import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.ICategoryEntityMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CategoryEntityMapper implements ICategoryEntityMapper{
+public class CategoryEntityMapper implements ICategoryEntityMapper {
     @Override
     public Category toModel(CategoryEntity categoryEntity) {
         return new Category(categoryEntity.getId(), categoryEntity.getName(), categoryEntity.getDescription());
