@@ -19,6 +19,6 @@ public class UserClientAdapter implements IUserClientPort {
 
     @Override
     public UserResponse getUserByEmail(String email) {
-        return  userFeignClient.getUserByEmail(email);
+        return userFeignClient.getUserByEmail(email);
     }
 }

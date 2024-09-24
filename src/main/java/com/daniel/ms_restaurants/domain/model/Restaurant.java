@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 public class Restaurant {
 
-    private Long id;
+    private long id;
 
     @NotBlank
     @Size(min = 1, message = "Restaurant name could ha")

@@ -15,6 +15,7 @@ import com.daniel.ms_restaurants.domain.model.UserResponse;
 import com.daniel.ms_restaurants.infrastructure.exception.UserNotOwnerOfRestaurantException;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtService;
+import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtTokenHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,8 +75,8 @@ public class DishHandler implements IDishHandler {
 
 
     public boolean userIsOwnerOfRestaurant(Restaurant restaurant) {
-        String email = jwtService.extractUsername(JwtService.getJwtFromSecurityContext());
-        UserResponse userResponse = userFeignClient.getUserByEmail(email);
+        String email = jwtService.extractUsername(JwtTokenHolder.getToken());
+        UserResponse userResponse = userFeignClient.findByEmail(email);
         return restaurant.getOwnerId() == userResponse.getId();
     }
 }
