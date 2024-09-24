@@ -43,6 +43,14 @@ public class Restaurant {
         this.nit = nit;
     }
 
+    public Restaurant(String address, String name, long ownerId, String phoneNumber, String logoUrl, String nit) {
+        this.address = address;
+        this.name = name;
+        this.ownerId = ownerId;
+        this.phoneNumber = phoneNumber;
+        this.logoUrl = logoUrl;
+        this.nit = nit;
+    }
 
     public long getId() {
         return id;

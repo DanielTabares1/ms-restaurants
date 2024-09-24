@@ -28,4 +28,7 @@ public class CreateDishRequest {
 
     @NotNull(message = "Category ID cannot be null")
     private Long idCategory;
+
+    @NotNull
+    private Long idRestaurant;
 }
