@@ -37,6 +37,11 @@ public class RestaurantHandler implements IRestaurantHandler {
     }
 
     @Override
+    public Restaurant getRestaurantById(long restaurantId) {
+        return restaurantServicePort.getRestaurantById(restaurantId);
+    }
+
+    @Override
     public List<RestaurantResponse> getAllRestaurants(int pageNumber, int pageSize) {
         return restaurantServicePort.getAllRestaurants(pageNumber, pageSize).stream().map(
                 restaurantResponseMapper::toResponse

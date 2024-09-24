@@ -23,7 +23,7 @@ public class DishEntity {
     private String description;
     private int price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private RestaurantEntity restaurant;
     private String imageUrl;
     private boolean active;
