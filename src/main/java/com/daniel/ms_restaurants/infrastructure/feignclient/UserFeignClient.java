@@ -11,4 +11,7 @@ public interface UserFeignClient {
     @GetMapping("/api/v1/admin/users/{id}")
     UserResponse getUserById(@PathVariable("id") long id);
 
+    @GetMapping("/api/v1/admin/users/by-email/{email}")
+    UserResponse getUserByEmail(@PathVariable("email") String email);
+
 }

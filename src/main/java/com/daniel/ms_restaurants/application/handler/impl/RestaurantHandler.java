@@ -9,6 +9,7 @@ import com.daniel.ms_restaurants.application.mapper.IRestaurantResponseMapper;
 import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.domain.model.UserResponse;
+import com.daniel.ms_restaurants.domain.model.UserRoles;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class RestaurantHandler implements IRestaurantHandler {
     @Override
     public Restaurant saveRestaurant(CreateRestaurantRequest request) {
         UserResponse owner = userFeignClient.getUserById(request.getOwnerId());
-        if (owner == null || !owner.getRole().getName().equals("OWNER")) {
+        if (owner == null || !owner.getRole().getName().equals(UserRoles.OWNER.toString())) {
             throw new OwnerNotFoundException("Owner was not found or user is not an Owner");
         }
         Restaurant restaurant = restaurantRequestMapper.toModel(request);
@@ -41,6 +42,4 @@ public class RestaurantHandler implements IRestaurantHandler {
                 restaurantResponseMapper::toResponse
         ).toList();
     }
-
-
 }
