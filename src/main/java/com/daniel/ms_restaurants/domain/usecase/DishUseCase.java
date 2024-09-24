@@ -4,6 +4,8 @@ import com.daniel.ms_restaurants.domain.api.IDishServicePort;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.spi.IDishPersistencePort;
 
+import java.util.List;
+
 public class DishUseCase implements IDishServicePort {
 
     private final IDishPersistencePort dishPersistencePort;
@@ -20,6 +22,11 @@ public class DishUseCase implements IDishServicePort {
     @Override
     public Dish getDishById(long id) {
         return dishPersistencePort.getDishById(id);
+    }
+
+    @Override
+    public List<Dish> findAllDishesByRestaurantId(long restaurantId) {
+        return dishPersistencePort.getAllDishesByRestaurantId(restaurantId);
     }
 
     @Override

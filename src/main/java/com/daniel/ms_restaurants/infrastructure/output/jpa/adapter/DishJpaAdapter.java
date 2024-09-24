@@ -8,6 +8,8 @@ import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IDishEntityMap
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IDishRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class DishJpaAdapter implements IDishPersistencePort {
 
@@ -34,5 +36,13 @@ public class DishJpaAdapter implements IDishPersistencePort {
                 () -> new DishNotFoundException("Dish not found with id " + id)
         );
         return dishEntityMapper.toModel(dishEntity);
+    }
+
+    @Override
+    public List<Dish> getAllDishesByRestaurantId(long restaurantId) {
+        List<DishEntity> dishEntityList = dishRepository.findAllByRestaurantId(restaurantId);
+        return dishEntityList.stream().map(
+                dishEntityMapper::toModel
+        ).toList();
     }
 }

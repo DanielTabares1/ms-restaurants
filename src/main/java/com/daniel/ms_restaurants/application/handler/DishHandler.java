@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -49,5 +51,11 @@ public class DishHandler implements IDishHandler{
        //todo - validate owner based on Authentication with database
        originalDish.setActive(req.isActivate());
        return dishServicePort.editDish(dishId, originalDish);
+    }
+
+    @Override
+    public List<Dish> getAllDishesByRestaurantId(long restaurantId) {
+        //todo - validate client based on authentication with database
+        return dishServicePort.findAllDishesByRestaurantId(restaurantId);
     }
 }
