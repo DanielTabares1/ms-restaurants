@@ -1,12 +1,14 @@
 package com.daniel.ms_restaurants.infrastructure.input.rest;
 
 import com.daniel.ms_restaurants.application.dto.CreateOrderRequest;
+import com.daniel.ms_restaurants.application.dto.OrderResponse;
 import com.daniel.ms_restaurants.application.dto.RestaurantMenuResponse;
 import com.daniel.ms_restaurants.application.dto.RestaurantResponse;
 import com.daniel.ms_restaurants.application.handler.IDishHandler;
 import com.daniel.ms_restaurants.application.handler.IOrderHandler;
 import com.daniel.ms_restaurants.application.handler.IRestaurantHandler;
 import com.daniel.ms_restaurants.application.mapper.IDishResponseMapper;
+import com.daniel.ms_restaurants.application.mapper.IOrderResponseMapper;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
@@ -26,6 +28,7 @@ public class ClientController {
     private final IRestaurantHandler restaurantHandler;
     private final IDishResponseMapper dishResponseMapper;
     private final IOrderHandler orderHandler;
+    private final IOrderResponseMapper orderResponseMapper;
 
     @GetMapping("/dishes/{restaurantId}")
     public RestaurantMenuResponse getAllDishesByRestaurantId(
@@ -65,9 +68,21 @@ public class ClientController {
     }
 
     @PostMapping("/order")
-    public ResponseEntity<Order> createNewOrder(@RequestBody CreateOrderRequest createOrderRequest){
+    public ResponseEntity<OrderResponse> createNewOrder(@RequestBody CreateOrderRequest createOrderRequest) {
         Order order = orderHandler.createOrder(createOrderRequest);
-        return new ResponseEntity<>(order, HttpStatus.CREATED);
+        OrderResponse orderResponse = orderResponseMapper.toResponse(order);
+        return new ResponseEntity<>(orderResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/order/append-dish")
+    public ResponseEntity<OrderResponse> appendDishToOrder(
+            @RequestParam int orderId,
+            @RequestParam int dishId,
+            @RequestParam int amount
+    ) {
+        Order order = orderHandler.appendDish(orderId, dishId, amount);
+        OrderResponse orderResponse = orderResponseMapper.toResponse(order);
+        return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 
 }

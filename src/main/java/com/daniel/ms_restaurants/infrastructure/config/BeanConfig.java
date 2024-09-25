@@ -4,26 +4,14 @@ import com.daniel.ms_restaurants.domain.api.ICategoryServicePort;
 import com.daniel.ms_restaurants.domain.api.IDishServicePort;
 import com.daniel.ms_restaurants.domain.api.IOrderServicePort;
 import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
-import com.daniel.ms_restaurants.domain.spi.ICategoryPersistencePort;
-import com.daniel.ms_restaurants.domain.spi.IDishPersistencePort;
-import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
-import com.daniel.ms_restaurants.domain.spi.RestaurantPersistencePort;
+import com.daniel.ms_restaurants.domain.spi.*;
 import com.daniel.ms_restaurants.domain.usecase.CategoryUseCase;
 import com.daniel.ms_restaurants.domain.usecase.DishUseCase;
 import com.daniel.ms_restaurants.domain.usecase.IRestaurantUseCase;
 import com.daniel.ms_restaurants.domain.usecase.OrderUseCase;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.adapter.CategoryJpaAdapter;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.adapter.DishJpaAdapter;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.adapter.OrderJpaAdapter;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.adapter.RestaurantJpaAdapter;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.ICategoryEntityMapper;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IDishEntityMapper;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IOrderEntityMapper;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IRestaurantEntityMapper;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.ICategoryRepository;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IDishRepository;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IOrderRepository;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IRestaurantRepository;
+import com.daniel.ms_restaurants.infrastructure.output.jpa.adapter.*;
+import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.*;
+import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +31,10 @@ public class BeanConfig {
 
     private final IOrderEntityMapper orderEntityMapper;
     private final IOrderRepository orderRepository;
+
+    private final IOrderDishEntityMapper orderDishEntityMapper;
+    private final IOrderDishRepository orderDishRepository;
+
 
     @Bean
     public RestaurantPersistencePort restaurantPersistencePort() {
@@ -82,7 +74,12 @@ public class BeanConfig {
 
     @Bean
     public IOrderServicePort orderServicePort() {
-        return new OrderUseCase(orderPersistencePort());
+        return new OrderUseCase(orderPersistencePort(), orderDishPersistencePort());
+    }
+
+    @Bean
+    public IOrderDishPersistencePort orderDishPersistencePort(){
+        return new OrderDishJpaAdapter(orderDishRepository, orderDishEntityMapper);
     }
 
 

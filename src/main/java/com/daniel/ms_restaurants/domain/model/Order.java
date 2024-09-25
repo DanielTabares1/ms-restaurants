@@ -1,7 +1,5 @@
 package com.daniel.ms_restaurants.domain.model;
 
-import jakarta.persistence.ManyToMany;
-
 import java.util.Date;
 import java.util.Set;
 

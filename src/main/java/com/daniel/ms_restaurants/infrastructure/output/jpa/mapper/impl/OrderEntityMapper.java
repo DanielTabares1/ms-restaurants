@@ -56,6 +56,7 @@ public class OrderEntityMapper implements IOrderEntityMapper {
         }
 
         OrderDishEntity orderDishEntity = new OrderDishEntity();
+        orderDishEntity.setId(orderDish.getId());
         orderDishEntity.setOrder(orderEntity);
         orderDishEntity.setAmount(orderDish.getAmount());
         orderDishEntity.setDish(getDishEntityFromModel(orderDish.getDish(), restaurant));
@@ -105,6 +106,7 @@ public class OrderEntityMapper implements IOrderEntityMapper {
         }
 
         return new OrderDish(
+                orderDishEntity.getId(),
                 order,
                 getDishModelFromEntity(orderDishEntity.getDish(), restaurant),
                 orderDishEntity.getAmount()

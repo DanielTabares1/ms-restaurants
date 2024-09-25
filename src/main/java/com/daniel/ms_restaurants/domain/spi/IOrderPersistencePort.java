@@ -5,5 +5,8 @@ import com.daniel.ms_restaurants.domain.model.Order;
 
 public interface IOrderPersistencePort {
     Order createOrder(Order order);
-    Order appendDish(Dish dish, int amount);
+
+    Order editOrder(long orderId, Order editedOrder);
+
+    Order getById(long orderId);
 }

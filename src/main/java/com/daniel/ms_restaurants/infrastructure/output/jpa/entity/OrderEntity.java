@@ -1,5 +1,7 @@
 package com.daniel.ms_restaurants.infrastructure.output.jpa.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +30,7 @@ public class OrderEntity {
     @ManyToOne
     private RestaurantEntity restaurant;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<OrderDishEntity> dishes;
 
