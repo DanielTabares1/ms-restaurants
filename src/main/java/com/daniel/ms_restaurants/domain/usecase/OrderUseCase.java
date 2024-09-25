@@ -7,6 +7,7 @@ import com.daniel.ms_restaurants.domain.model.OrderDish;
 import com.daniel.ms_restaurants.domain.spi.IOrderDishPersistencePort;
 import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
 
+import java.util.List;
 import java.util.Optional;
 
 public class OrderUseCase implements IOrderServicePort {
@@ -45,5 +46,10 @@ public class OrderUseCase implements IOrderServicePort {
     @Override
     public Order getById(long orderId) {
         return orderPersistencePort.getById(orderId);
+    }
+
+    @Override
+    public List<Order> getByClientId(long clientId) {
+        return orderPersistencePort.getByClientId(clientId);
     }
 }

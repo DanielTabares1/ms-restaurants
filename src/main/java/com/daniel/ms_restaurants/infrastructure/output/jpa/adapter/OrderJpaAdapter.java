@@ -8,6 +8,8 @@ import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IOrderEntityMa
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IOrderRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class OrderJpaAdapter implements IOrderPersistencePort {
 
@@ -40,4 +42,11 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
         return orderEntityMapper.toModel(orderEntity);
     }
 
+    @Override
+    public List<Order> getByClientId(long clientId) {
+        List<OrderEntity> orderEntities = orderRepository.findByClientId(clientId);
+        return orderEntities.stream().map(
+                orderEntityMapper::toModel
+        ).toList();
+    }
 }

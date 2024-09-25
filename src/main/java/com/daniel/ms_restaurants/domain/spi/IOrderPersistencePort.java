@@ -1,7 +1,8 @@
 package com.daniel.ms_restaurants.domain.spi;
 
-import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Order;
+
+import java.util.List;
 
 public interface IOrderPersistencePort {
     Order createOrder(Order order);
@@ -9,4 +10,6 @@ public interface IOrderPersistencePort {
     Order editOrder(long orderId, Order editedOrder);
 
     Order getById(long orderId);
+
+    List<Order> getByClientId(long clientId);
 }
