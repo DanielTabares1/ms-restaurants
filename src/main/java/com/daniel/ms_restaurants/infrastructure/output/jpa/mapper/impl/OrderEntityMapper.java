@@ -5,8 +5,6 @@ import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.*;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IOrderEntityMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -15,7 +13,6 @@ public class OrderEntityMapper implements IOrderEntityMapper {
     @Override
     public Order toModel(OrderEntity orderEntity) {
         Order order = new Order();
-        Set<OrderDish> dishes = new HashSet<>();
         Restaurant restaurant = getRestaurant(orderEntity);
 
         order.setId(orderEntity.getId());
@@ -36,7 +33,6 @@ public class OrderEntityMapper implements IOrderEntityMapper {
     @Override
     public OrderEntity toEntity(Order order) {
         OrderEntity orderEntity = new OrderEntity();
-        Set<OrderDishEntity> dishes = new HashSet<>();
         RestaurantEntity restaurantEntity = getRestaurantEntity(order);
 
         orderEntity.setId(order.getId());

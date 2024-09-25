@@ -11,7 +11,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateOrderRequest {
-    private long clientId;
-    private long chefId;
     private long restaurantId;
 }
