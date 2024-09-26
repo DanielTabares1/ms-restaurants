@@ -13,4 +13,6 @@ public interface IOrderServicePort {
     Order getById(long orderId);
 
     List<Order> getByClientId(long clientId);
+
+    List<Order> getByRestaurantIdAndByStatus(long restaurantId, String status);
 }

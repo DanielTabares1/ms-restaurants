@@ -1,6 +1,5 @@
 package com.daniel.ms_restaurants.infrastructure.output.jpa.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,7 @@ public class OrderEntity {
     private Long id;
     private long clientId;
     private Date date;
-    private String state;
+    private String status;
     private long chefId;
 
     @ManyToOne

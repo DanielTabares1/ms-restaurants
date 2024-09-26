@@ -9,4 +9,5 @@ public interface IOrderHandler {
     Order createOrder(CreateOrderRequest createOrderRequest);
     Order appendDish(long orderId, long dishId, int amount);
     List<Order> getByClientId(long clientId);
+    List<Order> getByStatus(String status);
 }

@@ -7,7 +7,7 @@ public class Order {
     private long id;
     private long clientId;
     private Date date;
-    private String state;
+    private String status;
     private long chefId;
     private Restaurant restaurant;
     private Set<OrderDish> dishes;
@@ -15,20 +15,20 @@ public class Order {
 
     public Order(){}
 
-    public Order(long id, long clientId, Date date, String state, long chefId, Set<OrderDish> dishes, Restaurant restaurant) {
+    public Order(long id, long clientId, Date date, String status, long chefId, Set<OrderDish> dishes, Restaurant restaurant) {
         this.id = id;
         this.clientId = clientId;
         this.date = date;
-        this.state = state;
+        this.status = status;
         this.chefId = chefId;
         this.dishes = dishes;
         this.restaurant = restaurant;
     }
 
-    public Order(long clientId, Date date, String state, long chefId, Set<OrderDish> dishes, Restaurant restaurant) {
+    public Order(long clientId, Date date, String status, long chefId, Set<OrderDish> dishes, Restaurant restaurant) {
         this.clientId = clientId;
         this.date = date;
-        this.state = state;
+        this.status = status;
         this.chefId = chefId;
         this.dishes = dishes;
         this.restaurant = restaurant;
@@ -58,12 +58,12 @@ public class Order {
         this.date = date;
     }
 
-    public String getState() {
-        return state;
+    public String getStatus() {
+        return status;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public long getChefId() {

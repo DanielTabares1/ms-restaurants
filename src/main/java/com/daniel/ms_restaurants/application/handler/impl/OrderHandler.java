@@ -39,9 +39,9 @@ public class OrderHandler implements IOrderHandler {
 
         List<Order> ordersOfClient = orderServicePort.getByClientId(client.getId());
         for (Order order : ordersOfClient) {
-            if (order.getState().equals(OrderStatus.PENDING.toString()) ||
-                    order.getState().equals(OrderStatus.IN_PROGRESS.toString()) ||
-                    order.getState().equals(OrderStatus.READY.toString())
+            if (order.getStatus().equals(OrderStatus.PENDING.toString()) ||
+                    order.getStatus().equals(OrderStatus.IN_PROGRESS.toString()) ||
+                    order.getStatus().equals(OrderStatus.READY.toString())
             ) {
                 throw new UserAlreadyHaveAnOrderActive("The client already has an order in progress");
             }
@@ -74,6 +74,13 @@ public class OrderHandler implements IOrderHandler {
     @Override
     public List<Order> getByClientId(long clientId) {
         return orderServicePort.getByClientId(clientId);
+    }
+
+    @Override
+    public List<Order> getByStatus(String status) {
+        int restaurantId = 1;
+        //todo - getRestaurantIdFromAuthentication
+        return orderServicePort.getByRestaurantIdAndByStatus(restaurantId, status);
     }
 
 

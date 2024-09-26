@@ -19,7 +19,7 @@ public class OrderEntityMapper implements IOrderEntityMapper {
         order.setChefId(orderEntity.getChefId());
         order.setClientId(orderEntity.getClientId());
         order.setDate(orderEntity.getDate());
-        order.setState(orderEntity.getState());
+        order.setStatus(orderEntity.getStatus());
         order.setRestaurant(restaurant);
         order.setDishes(
                 orderEntity.getDishes().stream().map(
@@ -39,7 +39,7 @@ public class OrderEntityMapper implements IOrderEntityMapper {
         orderEntity.setChefId(order.getChefId());
         orderEntity.setClientId(order.getClientId());
         orderEntity.setDate(order.getDate());
-        orderEntity.setState(order.getState());
+        orderEntity.setStatus(order.getStatus());
         orderEntity.setRestaurant(restaurantEntity);
         orderEntity.setDishes(
                 order.getDishes().stream().map(

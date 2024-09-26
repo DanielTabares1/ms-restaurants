@@ -52,4 +52,9 @@ public class OrderUseCase implements IOrderServicePort {
     public List<Order> getByClientId(long clientId) {
         return orderPersistencePort.getByClientId(clientId);
     }
+
+    @Override
+    public List<Order> getByRestaurantIdAndByStatus(long restaurantId, String status) {
+        return orderPersistencePort.getByRestaurantIdAndStatus(restaurantId, status);
+    }
 }

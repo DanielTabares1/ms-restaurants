@@ -49,4 +49,12 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
                 orderEntityMapper::toModel
         ).toList();
     }
+
+    @Override
+    public List<Order> getByRestaurantIdAndStatus(long restaurantId, String status) {
+        List<OrderEntity> orderEntities = orderRepository.findByRestaurantIdAndStatus(restaurantId, status);
+        return orderEntities.stream().map(
+                orderEntityMapper::toModel
+        ).toList();
+    }
 }

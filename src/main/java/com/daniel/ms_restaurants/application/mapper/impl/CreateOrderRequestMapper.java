@@ -16,7 +16,7 @@ public class CreateOrderRequestMapper implements ICreateOrderRequestMapper {
     public Order toModel(CreateOrderRequest request) {
         Order order = new Order();
         order.setDate(new Date());
-        order.setState(OrderStatus.PENDING.toString());
+        order.setStatus(OrderStatus.PENDING.toString());
         order.setDishes(new HashSet<>());
 
         Restaurant restaurant = new Restaurant();
