@@ -3,7 +3,7 @@ package com.daniel.ms_restaurants.application.mapper.impl;
 import com.daniel.ms_restaurants.application.dto.CreateOrderRequest;
 import com.daniel.ms_restaurants.application.mapper.ICreateOrderRequestMapper;
 import com.daniel.ms_restaurants.domain.model.Order;
-import com.daniel.ms_restaurants.domain.model.OrderStatus;
+import com.daniel.ms_restaurants.domain.model.enums.OrderStatus;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import org.springframework.stereotype.Component;
 

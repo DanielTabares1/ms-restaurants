@@ -8,8 +8,8 @@ import com.daniel.ms_restaurants.application.mapper.ICreateRestaurantRequestMapp
 import com.daniel.ms_restaurants.application.mapper.IRestaurantResponseMapper;
 import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
-import com.daniel.ms_restaurants.domain.model.UserResponse;
-import com.daniel.ms_restaurants.domain.model.UserRoles;
+import com.daniel.ms_restaurants.application.dto.UserResponse;
+import com.daniel.ms_restaurants.domain.model.enums.UserRoles;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.List;
 @Transactional
 public class RestaurantHandler implements IRestaurantHandler {
     private final IRestaurantServicePort restaurantServicePort;
-    private final UserFeignClient userFeignClient;
+    private final UserFeignClient userFeignClient; //borrar esto de acá, no puedo consumir algo de afuera
     private final IRestaurantResponseMapper restaurantResponseMapper;
     private final ICreateRestaurantRequestMapper restaurantRequestMapper;
 

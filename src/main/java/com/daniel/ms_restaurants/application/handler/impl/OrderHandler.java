@@ -7,11 +7,12 @@ import com.daniel.ms_restaurants.application.exception.UserAlreadyHaveAnOrderAct
 import com.daniel.ms_restaurants.application.handler.IOrderHandler;
 import com.daniel.ms_restaurants.application.mapper.ICreateOrderRequestMapper;
 import com.daniel.ms_restaurants.domain.api.IDishServicePort;
+import com.daniel.ms_restaurants.domain.api.IEmployeeRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.api.IOrderServicePort;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Order;
-import com.daniel.ms_restaurants.domain.model.OrderStatus;
-import com.daniel.ms_restaurants.domain.model.UserResponse;
+import com.daniel.ms_restaurants.domain.model.enums.OrderStatus;
+import com.daniel.ms_restaurants.application.dto.UserResponse;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtService;
 import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtTokenHolder;
@@ -31,6 +32,7 @@ public class OrderHandler implements IOrderHandler {
     private final UserFeignClient userFeignClient;
     private final JwtService jwtService;
     private final IDishServicePort dishServicePort;
+    private final IEmployeeRestaurantServicePort employeeRestaurantServicePort;
 
 
     @Override
@@ -78,8 +80,9 @@ public class OrderHandler implements IOrderHandler {
 
     @Override
     public List<Order> getByStatus(String status) {
-        int restaurantId = 1;
-        //todo - getRestaurantIdFromAuthentication
+        long restaurantId = employeeRestaurantServicePort.getRestaurantIdByEmail(
+                jwtService.extractUsername(JwtTokenHolder.getToken())
+        );
         return orderServicePort.getByRestaurantIdAndByStatus(restaurantId, status);
     }
 

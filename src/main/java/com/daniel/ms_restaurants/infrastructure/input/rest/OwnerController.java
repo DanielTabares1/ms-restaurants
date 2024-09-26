@@ -4,7 +4,9 @@ import com.daniel.ms_restaurants.application.dto.CreateDishRequest;
 import com.daniel.ms_restaurants.application.dto.EditDishRequest;
 import com.daniel.ms_restaurants.application.dto.ToggleActivationToDishRequest;
 import com.daniel.ms_restaurants.application.handler.IDishHandler;
+import com.daniel.ms_restaurants.application.handler.IEmployeeRestaurantHandler;
 import com.daniel.ms_restaurants.domain.model.Dish;
+import com.daniel.ms_restaurants.domain.model.EmployeeRestaurant;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,7 +22,13 @@ import org.springframework.web.bind.annotation.*;
 public class OwnerController {
 
     private final IDishHandler dishHandler;
+    private final IEmployeeRestaurantHandler employeeRestaurantHandler;
 
+    @PostMapping("/employee")
+    public ResponseEntity<EmployeeRestaurant> assignEmployee(@RequestBody EmployeeRestaurant employeeRestaurant){
+        EmployeeRestaurant savedEmployeeRestaurant = employeeRestaurantHandler.saveEmployee(employeeRestaurant);
+        return new ResponseEntity<>(savedEmployeeRestaurant, HttpStatus.CREATED);
+    }
 
     @PostMapping("/dish")
     @Operation(summary = "Add a new dish",

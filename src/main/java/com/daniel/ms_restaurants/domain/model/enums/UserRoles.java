@@ -1,4 +1,4 @@
-package com.daniel.ms_restaurants.domain.model;
+package com.daniel.ms_restaurants.domain.model.enums;
 
 public enum UserRoles {
     ADMIN("ROLE_ADMIN"),

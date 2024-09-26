@@ -11,7 +11,7 @@ import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.model.Category;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
-import com.daniel.ms_restaurants.domain.model.UserResponse;
+import com.daniel.ms_restaurants.application.dto.UserResponse;
 import com.daniel.ms_restaurants.infrastructure.exception.UserNotOwnerOfRestaurantException;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtService;

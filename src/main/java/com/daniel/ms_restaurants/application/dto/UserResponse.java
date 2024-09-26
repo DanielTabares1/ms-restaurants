@@ -1,4 +1,4 @@
-package com.daniel.ms_restaurants.domain.model;
+package com.daniel.ms_restaurants.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
