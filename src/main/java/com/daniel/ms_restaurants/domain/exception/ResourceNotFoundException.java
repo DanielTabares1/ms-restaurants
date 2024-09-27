@@ -1,4 +1,4 @@
-package com.daniel.ms_restaurants.infrastructure.exception;
+package com.daniel.ms_restaurants.domain.exception;
 
 public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(String message){

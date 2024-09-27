@@ -2,13 +2,14 @@ package com.daniel.ms_restaurants.infrastructure.output.jpa.adapter;
 
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
-import com.daniel.ms_restaurants.infrastructure.exception.OrderNotFoundException;
+import com.daniel.ms_restaurants.domain.exception.OrderNotFoundException;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.OrderEntity;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IOrderEntityMapper;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IOrderRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class OrderJpaAdapter implements IOrderPersistencePort {
@@ -17,7 +18,7 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
     private final IOrderEntityMapper orderEntityMapper;
 
     @Override
-    public Order createOrder(Order order) {
+    public Order saveOrder(Order order) {
         OrderEntity orderEntity = orderEntityMapper.toEntity(order);
         OrderEntity newOrder = orderRepository.save(orderEntity);
         return orderEntityMapper.toModel(newOrder);
@@ -25,21 +26,17 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
 
     @Override
     public Order editOrder(long orderId, Order editedOrder) {
-        OrderEntity originalOrder = orderRepository.findById(orderId).orElseThrow(
-                () -> new OrderNotFoundException("Order not found with id: " + orderId)
-        );
         OrderEntity editedOrderEntity = orderEntityMapper.toEntity(editedOrder);
-        editedOrderEntity.setId(originalOrder.getId());
+        editedOrderEntity.setId(orderId);
         OrderEntity newOrderEntity = orderRepository.save(editedOrderEntity);
         return orderEntityMapper.toModel(newOrderEntity);
     }
 
     @Override
-    public Order getById(long orderId) {
-        OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow(
-                () -> new OrderNotFoundException("Order not found with id: " + orderId)
+    public Optional<Order> getById(long orderId) {
+        return orderRepository.findById(orderId).map(
+                orderEntityMapper::toModel
         );
-        return orderEntityMapper.toModel(orderEntity);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.daniel.ms_restaurants.application.exception;
+package com.daniel.ms_restaurants.domain.exception;
 
 public class OrderAndDishNotBelongToTheSameRestaurant extends RuntimeException{
     public OrderAndDishNotBelongToTheSameRestaurant(String message){

@@ -1,5 +1,6 @@
 package com.daniel.ms_restaurants.infrastructure.security.jwt;
 
+import com.daniel.ms_restaurants.domain.api.IJwtServicePort;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,7 +21,7 @@ import java.util.function.Function;
 
 @Service
 @Transactional
-public class JwtService {
+public class JwtService implements IJwtServicePort {
 
     private final static String SECRET_KEY = "3c34635d75435c4d3152453b6f39455c774a383758386b693d363a593d";
 
@@ -99,7 +100,4 @@ public class JwtService {
         }
         return null;
     }
-
-
-
 }

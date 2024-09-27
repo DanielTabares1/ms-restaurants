@@ -1,6 +1,6 @@
 package com.daniel.ms_restaurants.infrastructure.feignclient;
 
-import com.daniel.ms_restaurants.infrastructure.exception.ResourceNotFoundException;
+import com.daniel.ms_restaurants.domain.exception.ResourceNotFoundException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 

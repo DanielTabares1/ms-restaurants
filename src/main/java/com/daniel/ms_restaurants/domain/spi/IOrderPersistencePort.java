@@ -3,13 +3,14 @@ package com.daniel.ms_restaurants.domain.spi;
 import com.daniel.ms_restaurants.domain.model.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IOrderPersistencePort {
-    Order createOrder(Order order);
+    Order saveOrder(Order order);
 
     Order editOrder(long orderId, Order editedOrder);
 
-    Order getById(long orderId);
+    Optional<Order> getById(long orderId);
 
     List<Order> getByClientId(long clientId);
 

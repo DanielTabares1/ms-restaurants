@@ -3,6 +3,7 @@ package com.daniel.ms_restaurants.infrastructure.config;
 import com.daniel.ms_restaurants.domain.api.*;
 import com.daniel.ms_restaurants.domain.spi.*;
 import com.daniel.ms_restaurants.domain.usecase.*;
+import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.adapter.*;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.*;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.*;
@@ -32,6 +33,9 @@ public class BeanConfig {
     private final IEmployeeRestaurantEntityMapper employeeRestaurantEntityMapper;
     private final IEmployeeRestaurantRepository employeeRestaurantRepository;
 
+    private final IJwtServicePort jwtServicePort;
+    private final UserFeignClient userFeignClient;
+
 
     @Bean
     public RestaurantPersistencePort restaurantPersistencePort() {
@@ -40,7 +44,7 @@ public class BeanConfig {
 
     @Bean
     public IRestaurantServicePort restaurantServicePort() {
-        return new IRestaurantUseCase(restaurantPersistencePort());
+        return new IRestaurantUseCase(restaurantPersistencePort(), userFeignClient);
     }
 
 
@@ -51,7 +55,7 @@ public class BeanConfig {
 
     @Bean
     public IDishServicePort dishServicePort() {
-        return new DishUseCase(dishPersistencePort());
+        return new DishUseCase(dishPersistencePort(), jwtServicePort, userFeignClient);
     }
 
     @Bean
@@ -71,22 +75,22 @@ public class BeanConfig {
 
     @Bean
     public IOrderServicePort orderServicePort() {
-        return new OrderUseCase(orderPersistencePort(), orderDishPersistencePort());
+        return new OrderUseCase(orderPersistencePort(), orderDishPersistencePort(), userFeignClient,jwtServicePort,employeeRestaurantPersistencePort());
     }
 
     @Bean
-    public IOrderDishPersistencePort orderDishPersistencePort(){
+    public IOrderDishPersistencePort orderDishPersistencePort() {
         return new OrderDishJpaAdapter(orderDishRepository, orderDishEntityMapper);
     }
 
     @Bean
-    public IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort(){
+    public IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort() {
         return new EmployeeRestaurantJpaAdapter(employeeRestaurantRepository, employeeRestaurantEntityMapper);
     }
 
     @Bean
-    public IEmployeeRestaurantServicePort employeeRestaurantServicePort(){
-        return new EmployeeRestaurantUseCase(employeeRestaurantPersistencePort());
+    public IEmployeeRestaurantServicePort employeeRestaurantServicePort() {
+        return new EmployeeRestaurantUseCase(employeeRestaurantPersistencePort(), restaurantPersistencePort(), jwtServicePort, userFeignClient);
     }
 
 
