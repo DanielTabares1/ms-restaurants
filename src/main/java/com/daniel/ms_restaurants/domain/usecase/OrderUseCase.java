@@ -96,4 +96,15 @@ public class OrderUseCase implements IOrderServicePort {
         ).getId();
         return orderPersistencePort.getByRestaurantIdAndStatus(restaurantId, status);
     }
+
+    @Override
+    public Order assignEmployee(long orderId) {
+        Order order = orderPersistencePort.getById(orderId).orElseThrow(
+                () -> new OrderNotFoundException(ErrorMessages.ORDER_NOT_FOUND.getMessage(orderId))
+        );
+        UserResponse employee = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
+        order.setChefId(employee.getId());
+        order.setStatus(OrderStatus.IN_PROGRESS.toString());
+        return orderPersistencePort.saveOrder(order);
+    }
 }

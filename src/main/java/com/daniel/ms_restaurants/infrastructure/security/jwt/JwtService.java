@@ -25,7 +25,7 @@ import java.util.function.Function;
 public class JwtService implements IJwtServicePort {
 
     @Value("${spring.security.key}")
-    private static String securityKey;
+    private String securityKey;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -89,7 +89,7 @@ public class JwtService implements IJwtServicePort {
         return null;
     }
 
-    public static String getRoleFromToken() {
+    public static String getRoleFromToken(String securityKey) {
         String token = getJwtFromSecurityContext();
 
         if (token != null) {

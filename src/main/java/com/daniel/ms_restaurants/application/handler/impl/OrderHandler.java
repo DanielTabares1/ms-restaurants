@@ -47,5 +47,10 @@ public class OrderHandler implements IOrderHandler {
         return orderServicePort.getByRestaurantIdAndByStatus(status);
     }
 
+    @Override
+    public Order assignEmployee(long orderId) {
+        return orderServicePort.assignEmployee(orderId);
+    }
+
 
 }

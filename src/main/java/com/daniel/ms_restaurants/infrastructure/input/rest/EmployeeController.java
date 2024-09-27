@@ -9,10 +9,7 @@ import com.daniel.ms_restaurants.infrastructure.input.rest.constants.ApiEndpoint
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +28,14 @@ public class EmployeeController {
                orderResponseMapper::toResponse
        ).toList();
        return new ResponseEntity<>(orderResponseList, HttpStatus.OK);
+    }
+
+    @PutMapping("/assign-order")
+    public ResponseEntity<OrderResponse> assignEmployeeToOrder(
+            @RequestParam long orderId
+    ){
+        Order editedOrder = orderHandler.assignEmployee(orderId);
+        return new ResponseEntity<>(orderResponseMapper.toResponse(editedOrder), HttpStatus.OK);
     }
 
 

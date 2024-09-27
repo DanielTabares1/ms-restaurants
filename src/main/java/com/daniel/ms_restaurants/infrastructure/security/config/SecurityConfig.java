@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(SecurityConstants.ADMIN_API).hasRole(SecurityConstants.ADMIN_ROLE)
                         .requestMatchers(SecurityConstants.OWNER_API).hasRole(SecurityConstants.OWNER_ROLE)
                         .requestMatchers(SecurityConstants.CLIENT_API).hasRole(SecurityConstants.CLIENT_ROLE)
+                        .requestMatchers(SecurityConstants.EMPLOYEE_API).hasRole(SecurityConstants.EMPLOYEE_ROLE)
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
