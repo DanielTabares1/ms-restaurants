@@ -11,9 +11,11 @@ import com.daniel.ms_restaurants.domain.model.enums.OrderStatus;
 import com.daniel.ms_restaurants.domain.spi.IEmployeeRestaurantPersistencePort;
 import com.daniel.ms_restaurants.domain.spi.IOrderDishPersistencePort;
 import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
+import com.daniel.ms_restaurants.domain.spi.ISmsPersistencePort;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtTokenHolder;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,13 +25,17 @@ public class OrderUseCase implements IOrderServicePort {
     private final IOrderPersistencePort orderPersistencePort;
     private final IOrderDishPersistencePort orderDishPersistencePort;
     private final UserFeignClient userFeignClient;
+    private final ISmsPersistencePort smsPersistencePort;
     private final IJwtServicePort jwtService;
     private final IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort;
 
-    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IOrderDishPersistencePort orderDishPersistencePort, UserFeignClient userFeignClient, IJwtServicePort jwtService, IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort) {
+    private static final SecureRandom random = new SecureRandom();
+
+    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IOrderDishPersistencePort orderDishPersistencePort, UserFeignClient userFeignClient, ISmsPersistencePort smsPersistencePort, IJwtServicePort jwtService, IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort) {
         this.orderPersistencePort = orderPersistencePort;
         this.orderDishPersistencePort = orderDishPersistencePort;
         this.userFeignClient = userFeignClient;
+        this.smsPersistencePort = smsPersistencePort;
         this.jwtService = jwtService;
         this.employeeRestaurantPersistencePort = employeeRestaurantPersistencePort;
     }
@@ -54,7 +60,7 @@ public class OrderUseCase implements IOrderServicePort {
     public Order appendDish(Order order, Dish dish, int amount) {
         UserResponse client = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
         if (client.getId() != order.getClientId()) {
-            throw new OrderNotBelongToClientException(ErrorMessages.ORDER_NOT_BELONG_TO_CLIENT.getMessage(order.getId(),client.getUsername()));
+            throw new OrderNotBelongToClientException(ErrorMessages.ORDER_NOT_BELONG_TO_CLIENT.getMessage(order.getId(), client.getUsername()));
         }
 
         if (order.getRestaurant().getId() != dish.getRestaurant().getId()) {
@@ -106,5 +112,47 @@ public class OrderUseCase implements IOrderServicePort {
         order.setChefId(employee.getId());
         order.setStatus(OrderStatus.IN_PROGRESS.toString());
         return orderPersistencePort.saveOrder(order);
+    }
+
+    @Override
+    public Order setStatus(long orderId, String status) {
+        Order order = orderPersistencePort.getById(orderId).orElseThrow(
+                () -> new OrderNotFoundException(ErrorMessages.ORDER_NOT_FOUND.getMessage(orderId))
+        );
+        validateStatusTransition(order.getStatus(), status);
+        order.setStatus(status);
+        if (Objects.equals(status, OrderStatus.READY.toString())) {
+            smsPersistencePort.sendSms(
+                    order.getRestaurant().getName(),
+                    userFeignClient.findUserById(order.getClientId()).getName(),
+                    (random.nextInt(900000) + 100000) + ""
+            );
+        }
+        return order;
+    }
+
+    private void validateStatusTransition(String currentStatus, String newStatus) {
+        switch (currentStatus) {
+            case "PENDING":
+                if (!newStatus.equals(OrderStatus.CANCELLED.toString()) && !newStatus.equals(OrderStatus.IN_PROGRESS.toString())) {
+                    throw new InvalidOrderStatusTransitionException(ErrorMessages.INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM_TO.getMessage(OrderStatus.PENDING.toString(), newStatus));
+                }
+                break;
+
+            case "IN_PROGRESS":
+                if (!newStatus.equals("READY")) {
+                    throw new InvalidOrderStatusTransitionException(ErrorMessages.INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM_TO.getMessage(OrderStatus.IN_PROGRESS.toString(), newStatus));
+                }
+                break;
+
+            case "READY":
+                if (!newStatus.equals("DELIVERED")) {
+                    throw new InvalidOrderStatusTransitionException(ErrorMessages.INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM_TO.getMessage(OrderStatus.READY.toString(), newStatus));
+                }
+                break;
+
+            default:
+                throw new InvalidOrderStatusTransitionException(ErrorMessages.INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM.getMessage(currentStatus));
+        }
     }
 }

@@ -52,5 +52,10 @@ public class OrderHandler implements IOrderHandler {
         return orderServicePort.assignEmployee(orderId);
     }
 
+    @Override
+    public Order editStatus(long orderId, String statusName) {
+        return orderServicePort.setStatus(orderId, statusName);
+    }
+
 
 }

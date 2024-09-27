@@ -3,7 +3,9 @@ package com.daniel.ms_restaurants.infrastructure.config;
 import com.daniel.ms_restaurants.domain.api.*;
 import com.daniel.ms_restaurants.domain.spi.*;
 import com.daniel.ms_restaurants.domain.usecase.*;
+import com.daniel.ms_restaurants.infrastructure.feignclient.SmsFeignClient;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
+import com.daniel.ms_restaurants.infrastructure.feignclient.adapter.SmsClientAdapter;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.adapter.*;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.*;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.*;
@@ -35,6 +37,7 @@ public class BeanConfig {
 
     private final IJwtServicePort jwtServicePort;
     private final UserFeignClient userFeignClient;
+    private final SmsFeignClient smsFeignClient;
 
 
     @Bean
@@ -75,7 +78,7 @@ public class BeanConfig {
 
     @Bean
     public IOrderServicePort orderServicePort() {
-        return new OrderUseCase(orderPersistencePort(), orderDishPersistencePort(), userFeignClient,jwtServicePort,employeeRestaurantPersistencePort());
+        return new OrderUseCase(orderPersistencePort(), orderDishPersistencePort(), userFeignClient, smsPersistencePort(), jwtServicePort, employeeRestaurantPersistencePort());
     }
 
     @Bean
@@ -91,6 +94,11 @@ public class BeanConfig {
     @Bean
     public IEmployeeRestaurantServicePort employeeRestaurantServicePort() {
         return new EmployeeRestaurantUseCase(employeeRestaurantPersistencePort(), restaurantPersistencePort(), jwtServicePort, userFeignClient);
+    }
+
+    @Bean
+    public ISmsPersistencePort smsPersistencePort() {
+        return new SmsClientAdapter(smsFeignClient);
     }
 
 

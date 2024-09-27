@@ -17,4 +17,6 @@ public interface IOrderServicePort {
     List<Order> getByRestaurantIdAndByStatus(String status);
 
     Order assignEmployee(long orderId);
+
+    Order setStatus(long orderId, String status);
 }

@@ -23,7 +23,11 @@ public enum ErrorMessages {
     CATEGORY_NOT_FOUND("Category not found with ID: %d"),
 
     // Dish-related errors
-    DISH_NOT_FOUND("Dish not found with ID: %d");
+    DISH_NOT_FOUND("Dish not found with ID: %d"),
+
+    // Order status transition related errors
+    INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM_TO("Invalid transition from %s to %s"),
+    INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM("Invalid transition from %s");
 
 
     private final String message;

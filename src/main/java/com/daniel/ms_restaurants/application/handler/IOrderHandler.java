@@ -11,4 +11,6 @@ public interface IOrderHandler {
     List<Order> getByClientId(long clientId);
     List<Order> getByStatus(String status);
     Order assignEmployee(long orderId);
+    Order editStatus(long orderId, String statusName);
+
 }

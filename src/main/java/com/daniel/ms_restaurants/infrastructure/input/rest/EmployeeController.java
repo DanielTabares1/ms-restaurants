@@ -21,20 +21,26 @@ public class EmployeeController {
     private final IOrderHandler orderHandler;
     private final IOrderResponseMapper orderResponseMapper;
 
-    @GetMapping("/by-status")
-    public ResponseEntity<List<OrderResponse>> getOrdersByStatus(@RequestParam(value = "status") String status){
-       List<Order> orders = orderHandler.getByStatus(status);
-       List<OrderResponse> orderResponseList = orders.stream().map(
-               orderResponseMapper::toResponse
-       ).toList();
-       return new ResponseEntity<>(orderResponseList, HttpStatus.OK);
+    @GetMapping("/orders/by-status")
+    public ResponseEntity<List<OrderResponse>> getOrdersByStatus(@RequestParam(value = "status") String status) {
+        List<Order> orders = orderHandler.getByStatus(status);
+        List<OrderResponse> orderResponseList = orders.stream().map(
+                orderResponseMapper::toResponse
+        ).toList();
+        return new ResponseEntity<>(orderResponseList, HttpStatus.OK);
     }
 
-    @PutMapping("/assign-order")
+    @PutMapping("/orders/assign-order")
     public ResponseEntity<OrderResponse> assignEmployeeToOrder(
             @RequestParam long orderId
-    ){
+    ) {
         Order editedOrder = orderHandler.assignEmployee(orderId);
+        return new ResponseEntity<>(orderResponseMapper.toResponse(editedOrder), HttpStatus.OK);
+    }
+
+    @PutMapping("/orders/edit-status")
+    public ResponseEntity<OrderResponse> editOrderStatus(@RequestParam long orderId, @RequestParam String statusName) {
+        Order editedOrder = orderHandler.editStatus(orderId, statusName);
         return new ResponseEntity<>(orderResponseMapper.toResponse(editedOrder), HttpStatus.OK);
     }
 
