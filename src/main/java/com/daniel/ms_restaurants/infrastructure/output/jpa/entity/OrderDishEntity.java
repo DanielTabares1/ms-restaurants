@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "order_dish")
+@Table(name = EntityConstants.ORDER_DISH_TABLE_NAME)
 @Getter
 @Setter
 @AllArgsConstructor

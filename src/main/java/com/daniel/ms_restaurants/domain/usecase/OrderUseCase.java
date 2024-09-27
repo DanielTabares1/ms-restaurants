@@ -3,10 +3,7 @@ package com.daniel.ms_restaurants.domain.usecase;
 import com.daniel.ms_restaurants.application.dto.UserResponse;
 import com.daniel.ms_restaurants.domain.api.IJwtServicePort;
 import com.daniel.ms_restaurants.domain.api.IOrderServicePort;
-import com.daniel.ms_restaurants.domain.exception.OrderAndDishNotBelongToTheSameRestaurant;
-import com.daniel.ms_restaurants.domain.exception.OrderNotBelongToClientException;
-import com.daniel.ms_restaurants.domain.exception.OrderNotFoundException;
-import com.daniel.ms_restaurants.domain.exception.UserAlreadyHaveAnOrderActive;
+import com.daniel.ms_restaurants.domain.exception.*;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.model.OrderDish;
@@ -47,7 +44,7 @@ public class OrderUseCase implements IOrderServicePort {
                     existingOrder.getStatus().equals(OrderStatus.IN_PROGRESS.toString()) ||
                     existingOrder.getStatus().equals(OrderStatus.READY.toString())
             ) {
-                throw new UserAlreadyHaveAnOrderActive("The client already has an order in progress");
+                throw new UserAlreadyHaveAnOrderActive(ErrorMessages.USER_ALREADY_HAS_ACTIVE_ORDER.getMessage());
             }
         }
         return orderPersistencePort.saveOrder(order);
@@ -57,11 +54,11 @@ public class OrderUseCase implements IOrderServicePort {
     public Order appendDish(Order order, Dish dish, int amount) {
         UserResponse client = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
         if (client.getId() != order.getClientId()) {
-            throw new OrderNotBelongToClientException("Order with id: " + order.getClientId() + "not belongs to client with email: " + client.getUsername());
+            throw new OrderNotBelongToClientException(ErrorMessages.ORDER_NOT_BELONG_TO_CLIENT.getMessage(order.getId(),client.getUsername()));
         }
 
         if (order.getRestaurant().getId() != dish.getRestaurant().getId()) {
-            throw new OrderAndDishNotBelongToTheSameRestaurant("The order and the dish not belongs to the same restaurant");
+            throw new OrderAndDishNotBelongToTheSameRestaurant(ErrorMessages.ORDER_AND_DISH_NOT_BELONG_TO_SAME_RESTAURANT.getMessage());
         }
 
         Optional<OrderDish> existingOrderDish = order.getDishes().stream()
@@ -83,7 +80,7 @@ public class OrderUseCase implements IOrderServicePort {
     @Override
     public Order getById(long orderId) {
         return orderPersistencePort.getById(orderId).orElseThrow(
-                () -> new OrderNotFoundException("Order not found with id: " + orderId)
+                () -> new OrderNotFoundException(ErrorMessages.ORDER_NOT_FOUND.getMessage(orderId))
         );
     }
 

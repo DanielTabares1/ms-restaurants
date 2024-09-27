@@ -1,5 +1,6 @@
 package com.daniel.ms_restaurants.infrastructure.security.config;
 
+import com.daniel.ms_restaurants.infrastructure.security.SecurityConstants;
 import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,12 +25,6 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter authenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    private static final String[] WHITE_LIST_URL = {
-            "/api/v1/auth/**",
-            "/api/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/api/docs/**",
-    };
 
     @Bean
     PasswordEncoder passwordEncoder(){
@@ -42,10 +37,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/owner/**").hasRole("OWNER")
-                        .requestMatchers("/api/v1/client/**").hasRole("CLIENT")
+                        .requestMatchers(SecurityConstants.WHITE_LIST_URL).permitAll()
+                        .requestMatchers(SecurityConstants.ADMIN_API).hasRole(SecurityConstants.ADMIN_ROLE)
+                        .requestMatchers(SecurityConstants.OWNER_API).hasRole(SecurityConstants.OWNER_ROLE)
+                        .requestMatchers(SecurityConstants.CLIENT_API).hasRole(SecurityConstants.CLIENT_ROLE)
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)

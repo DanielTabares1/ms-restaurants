@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "dish")
+@Table(name = EntityConstants.DISH_TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

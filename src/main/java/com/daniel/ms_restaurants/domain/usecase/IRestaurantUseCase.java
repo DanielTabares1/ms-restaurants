@@ -2,6 +2,7 @@ package com.daniel.ms_restaurants.domain.usecase;
 
 import com.daniel.ms_restaurants.application.dto.UserResponse;
 import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
+import com.daniel.ms_restaurants.domain.exception.ErrorMessages;
 import com.daniel.ms_restaurants.domain.exception.OwnerNotFoundException;
 import com.daniel.ms_restaurants.domain.exception.RestaurantNotFoundException;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
@@ -25,7 +26,7 @@ public class IRestaurantUseCase implements IRestaurantServicePort {
     public Restaurant saveRestaurant(Restaurant restaurant) {
         UserResponse owner = userFeignClient.getUserById(restaurant.getOwnerId());
         if (owner == null || !owner.getRole().getName().equals(UserRoles.OWNER.toString())) {
-            throw new OwnerNotFoundException("Owner was not found or user is not an Owner");
+            throw new OwnerNotFoundException(ErrorMessages.OWNER_NOT_FOUND.getMessage());
         }
         return restaurantPersistencePort.saveRestaurant(restaurant);
     }
@@ -33,7 +34,7 @@ public class IRestaurantUseCase implements IRestaurantServicePort {
     @Override
     public Restaurant getRestaurantById(long id) {
         return restaurantPersistencePort.getRestaurantById(id).orElseThrow(
-                () -> new RestaurantNotFoundException("Restaurant not found with id:" + id)
+                () -> new RestaurantNotFoundException(ErrorMessages.RESTAURANT_NOT_FOUND.getMessage(id))
         );
     }
 

@@ -7,6 +7,7 @@ import com.daniel.ms_restaurants.application.handler.IDishHandler;
 import com.daniel.ms_restaurants.application.handler.IEmployeeRestaurantHandler;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.EmployeeRestaurant;
+import com.daniel.ms_restaurants.infrastructure.input.rest.constants.ApiEndpoints;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/owner")
+@RequestMapping(ApiEndpoints.OWNER_API)
 @RequiredArgsConstructor
 public class OwnerController {
 

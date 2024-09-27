@@ -5,6 +5,7 @@ import com.daniel.ms_restaurants.application.handler.IOrderHandler;
 import com.daniel.ms_restaurants.application.mapper.IOrderResponseMapper;
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
+import com.daniel.ms_restaurants.infrastructure.input.rest.constants.ApiEndpoints;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/employee")
+@RequestMapping(ApiEndpoints.EMPLOYEE_API)
 @RequiredArgsConstructor
 public class EmployeeController {
 

@@ -3,6 +3,8 @@ package com.daniel.ms_restaurants.domain.usecase;
 import com.daniel.ms_restaurants.application.dto.UserResponse;
 import com.daniel.ms_restaurants.domain.api.IEmployeeRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.api.IJwtServicePort;
+import com.daniel.ms_restaurants.domain.exception.ErrorMessages;
+import com.daniel.ms_restaurants.domain.exception.RestaurantNotFoundException;
 import com.daniel.ms_restaurants.domain.exception.UserNotOwnerOfRestaurantException;
 import com.daniel.ms_restaurants.domain.model.EmployeeRestaurant;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
@@ -27,9 +29,11 @@ public class EmployeeRestaurantUseCase implements IEmployeeRestaurantServicePort
 
     @Override
     public EmployeeRestaurant saveEmployee(EmployeeRestaurant employeeRestaurant) {
-        Restaurant restaurant = restaurantPersistencePort.getRestaurantById(employeeRestaurant.getRestaurantId());
+        Restaurant restaurant = restaurantPersistencePort.getRestaurantById(employeeRestaurant.getRestaurantId()).orElseThrow(
+                () -> new RestaurantNotFoundException(ErrorMessages.RESTAURANT_NOT_FOUND.getMessage(employeeRestaurant.getRestaurantId()))
+        );
         if (!userIsOwnerOfRestaurant(restaurant)) {
-            throw new UserNotOwnerOfRestaurantException("Authenticated user is not the owner of the restaurant with id: " + employeeRestaurant.getRestaurantId());
+            throw new UserNotOwnerOfRestaurantException(ErrorMessages.USER_NOT_OWNER_OF_RESTAURANT.getMessage(restaurant.getId()));
         }
         //todo - verify user email is of an employee
         return employeeRestaurantPersistencePort.saveEmployee(employeeRestaurant);

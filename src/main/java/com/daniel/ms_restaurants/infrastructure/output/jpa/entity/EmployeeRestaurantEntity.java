@@ -1,15 +1,13 @@
 package com.daniel.ms_restaurants.infrastructure.output.jpa.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = EntityConstants.EMPLOYEE_RESTAURANT_TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "orders")
+@Table(name = EntityConstants.ORDER_TABLE_NAME)
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Getter

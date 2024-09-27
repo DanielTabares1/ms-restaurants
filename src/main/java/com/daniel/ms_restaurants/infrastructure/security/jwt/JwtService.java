@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,8 @@ import java.util.function.Function;
 @Transactional
 public class JwtService implements IJwtServicePort {
 
-    private final static String SECRET_KEY = "3c34635d75435c4d3152453b6f39455c774a383758386b693d363a593d";
+    @Value("${spring.security.key}")
+    private static String securityKey;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -70,7 +72,7 @@ public class JwtService implements IJwtServicePort {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(securityKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -92,7 +94,7 @@ public class JwtService implements IJwtServicePort {
 
         if (token != null) {
             Claims claims = Jwts.parser()
-                    .setSigningKey(SECRET_KEY.getBytes())
+                    .setSigningKey(securityKey.getBytes())
                     .parseClaimsJws(token)
                     .getBody();
 

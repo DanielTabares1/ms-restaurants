@@ -12,6 +12,7 @@ import com.daniel.ms_restaurants.application.mapper.IOrderResponseMapper;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
+import com.daniel.ms_restaurants.infrastructure.input.rest.constants.ApiEndpoints;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/client")
+@RequestMapping(ApiEndpoints.CLIENT_API)
 public class ClientController {
 
     private final IDishHandler dishHandler;

@@ -1,6 +1,7 @@
 package com.daniel.ms_restaurants.infrastructure.security.jwt;
 
 import com.daniel.ms_restaurants.infrastructure.feignclient.CustomUserDetailsService;
+import com.daniel.ms_restaurants.infrastructure.security.SecurityConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,10 +28,7 @@ import java.util.List;
         private final JwtService jwtService;
         private final CustomUserDetailsService userDetailsService;
 
-        private final List<String> excludedPrefixes = Arrays.asList(
-                "/api/swagger-ui/**",
-                "/v3/api-docs/**",
-                "/api/docs");
+        private final List<String> excludedPrefixes = Arrays.asList(SecurityConstants.WHITE_LIST_URL);
 
         private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
@@ -46,11 +44,11 @@ import java.util.List;
                 return;
             }
 
-            final String authHeader = request.getHeader("Authorization");
+            final String authHeader = request.getHeader(SecurityConstants.AUTHORIZATION_HEADER);
             final String jwt;
             final String userEmail;
 
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            if (authHeader == null || !authHeader.startsWith(SecurityConstants.BEARER_PREFIX)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -92,7 +90,7 @@ import java.util.List;
         }
 
         private String getToken(HttpServletRequest request) {
-            return request.getHeader("Authorization").substring(7);
+            return request.getHeader(SecurityConstants.AUTHORIZATION_HEADER).substring(7);
         }
 
     }

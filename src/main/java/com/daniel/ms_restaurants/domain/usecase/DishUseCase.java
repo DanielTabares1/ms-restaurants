@@ -4,12 +4,12 @@ import com.daniel.ms_restaurants.application.dto.UserResponse;
 import com.daniel.ms_restaurants.domain.api.IDishServicePort;
 import com.daniel.ms_restaurants.domain.api.IJwtServicePort;
 import com.daniel.ms_restaurants.domain.exception.DishNotFoundException;
+import com.daniel.ms_restaurants.domain.exception.ErrorMessages;
 import com.daniel.ms_restaurants.domain.exception.UserNotOwnerOfRestaurantException;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.domain.spi.IDishPersistencePort;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.DishEntity;
 import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtTokenHolder;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class DishUseCase implements IDishServicePort {
     @Override
     public Dish createDish(Dish dish) {
         if (!userIsOwnerOfRestaurant(dish.getRestaurant())) {
-            throw new UserNotOwnerOfRestaurantException("Authenticated user is not the owner of the restaurant with id: " + dish.getRestaurant().getId());
+            throw new UserNotOwnerOfRestaurantException(ErrorMessages.USER_NOT_OWNER_OF_RESTAURANT_WITH_DISH.getMessage(dish.getId()));
         }
         return dishPersistencePort.createDish(dish);
     }
@@ -37,7 +37,7 @@ public class DishUseCase implements IDishServicePort {
     @Override
     public Dish getDishById(long id) {
         return dishPersistencePort.getDishById(id).orElseThrow(
-                () -> new DishNotFoundException("Dish not found with id :" + id)
+                () -> new DishNotFoundException(ErrorMessages.DISH_NOT_FOUND.getMessage(id))
         );
     }
 
@@ -54,7 +54,7 @@ public class DishUseCase implements IDishServicePort {
     @Override
     public Dish editDish(long dishId, Dish editedDish) {
         if (!userIsOwnerOfRestaurant(editedDish.getRestaurant())) {
-            throw new UserNotOwnerOfRestaurantException("Authenticated user is not the owner of the restaurant which offers dish with id: " + dishId);
+            throw new UserNotOwnerOfRestaurantException(ErrorMessages.USER_NOT_OWNER_OF_RESTAURANT_WITH_DISH.getMessage(dishId));
         }
         return dishPersistencePort.editDish(dishId, editedDish);
     }

@@ -3,6 +3,7 @@ package com.daniel.ms_restaurants.infrastructure.input.rest;
 import com.daniel.ms_restaurants.application.dto.CreateRestaurantRequest;
 import com.daniel.ms_restaurants.application.handler.IRestaurantHandler;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
+import com.daniel.ms_restaurants.infrastructure.input.rest.constants.ApiEndpoints;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin")
+@RequestMapping(ApiEndpoints.ADMIN_API)
 public class AdminController {
 
     private final IRestaurantHandler restaurantHandler;
