@@ -128,6 +128,7 @@ public class OrderUseCase implements IOrderServicePort {
                     (random.nextInt(900000) + 100000) + ""
             );
         }
+        orderPersistencePort.saveOrder(order);
         return order;
     }
 
