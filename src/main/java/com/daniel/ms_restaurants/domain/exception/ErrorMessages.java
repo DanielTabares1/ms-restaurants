@@ -8,6 +8,9 @@ public enum ErrorMessages {
     USER_ALREADY_HAS_ACTIVE_ORDER("User already has an active order"),
     USER_NOT_OWNER_OF_RESTAURANT("User is not the owner of the restaurant with ID: %d"),
     USER_NOT_OWNER_OF_RESTAURANT_WITH_DISH("User is not the owner of the restaurant that offers dish with ID: %d"),
+    USER_NOT_AN_EMPLOYEE("The user with email %s is not an employee"),
+    USER_NOT_A_CLIENT("The user with email %s is not a client"),
+
 
     // Restaurant-related errors
     RESTAURANT_NOT_FOUND("Restaurant not found with ID: %d"),

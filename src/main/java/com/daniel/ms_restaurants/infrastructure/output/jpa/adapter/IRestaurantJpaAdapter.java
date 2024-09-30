@@ -1,8 +1,7 @@
 package com.daniel.ms_restaurants.infrastructure.output.jpa.adapter;
 
 import com.daniel.ms_restaurants.domain.model.Restaurant;
-import com.daniel.ms_restaurants.domain.spi.RestaurantPersistencePort;
-import com.daniel.ms_restaurants.domain.exception.RestaurantNotFoundException;
+import com.daniel.ms_restaurants.domain.spi.IRestaurantPersistencePort;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.RestaurantEntity;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IRestaurantEntityMapper;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IRestaurantRepository;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class RestaurantJpaAdapter implements RestaurantPersistencePort {
+public class IRestaurantJpaAdapter implements IRestaurantPersistencePort {
 
     private final IRestaurantRepository restaurantRepository;
     private final IRestaurantEntityMapper restaurantEntityMapper;

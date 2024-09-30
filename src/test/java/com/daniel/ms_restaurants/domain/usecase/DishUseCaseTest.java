@@ -46,7 +46,6 @@ class DishUseCaseTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Inicializar objetos reutilizables
         testRestaurant = new Restaurant(RESTAURANT_ID, RESTAURANT_NAME, "123 Street", OWNER_ID, "+1234567890", "logoUrl", "123456789");
 
         testDish = new Dish(DISH_ID, DISH_NAME, CATEGORY, DISH_DESCRIPTION, DISH_PRICE, testRestaurant, "imageUrl", true);
@@ -54,19 +53,17 @@ class DishUseCaseTest {
         RoleResponse ownerRole = new RoleResponse(1L, OWNER_ROLE_NAME, "Owner role description");
         testUserResponse = new UserResponse(OWNER_ID, USER_NAME, USER_LAST_NAME, USER_DOCUMENT_NUMBER, USER_PHONE, null, USER_EMAIL, USER_PASSWORD, ownerRole);
 
-        JwtTokenHolder.setToken("mockedToken");  // Simula un token JWT para todas las pruebas
+        JwtTokenHolder.setToken("mockedToken");
     }
 
     @Test
     void testCreateDish_WhenUserIsNotOwner_ShouldThrowException() {
-        // Arrange
-        testRestaurant.setOwnerId(NON_EXISTENT_OWNER_ID); // Cambiar el ownerId para simular que el usuario no es dueño
+        testRestaurant.setOwnerId(NON_EXISTENT_OWNER_ID);
         testDish.setRestaurant(testRestaurant);
 
         when(jwtService.extractUsername(anyString())).thenReturn(USER_EMAIL);
         when(userFeignClient.findByEmail(anyString())).thenReturn(testUserResponse);
 
-        // Act & Assert
         UserNotOwnerOfRestaurantException exception = assertThrows(UserNotOwnerOfRestaurantException.class, () -> {
             dishUseCase.createDish(testDish);
         });
@@ -76,37 +73,29 @@ class DishUseCaseTest {
 
     @Test
     void testCreateDish_WhenUserIsOwner_ShouldCallPersistencePort() {
-        // Arrange
         when(jwtService.extractUsername(anyString())).thenReturn(USER_EMAIL);
         when(userFeignClient.findByEmail(anyString())).thenReturn(testUserResponse);
         when(dishPersistencePort.createDish(any(Dish.class))).thenReturn(testDish);
 
-        // Act
         Dish result = dishUseCase.createDish(testDish);
 
-        // Assert
         assertEquals(testDish, result);
         verify(dishPersistencePort, times(1)).createDish(testDish);
     }
 
     @Test
     void testGetDishById_WhenDishExists_ShouldReturnDish() {
-        // Arrange
         when(dishPersistencePort.getDishById(DISH_ID)).thenReturn(Optional.of(testDish));
 
-        // Act
         Dish result = dishUseCase.getDishById(DISH_ID);
 
-        // Assert
         assertEquals(testDish, result);
     }
 
     @Test
     void testGetDishById_WhenDishDoesNotExist_ShouldThrowException() {
-        // Arrange
         when(dishPersistencePort.getDishById(DISH_ID)).thenReturn(Optional.empty());
 
-        // Act & Assert
         DishNotFoundException exception = assertThrows(DishNotFoundException.class, () -> {
             dishUseCase.getDishById(DISH_ID);
         });
@@ -116,29 +105,25 @@ class DishUseCaseTest {
 
     @Test
     void testEditDish_WhenUserIsOwner_ShouldCallEditInPersistencePort() {
-        // Arrange
         when(jwtService.extractUsername(anyString())).thenReturn(USER_EMAIL);
         when(userFeignClient.findByEmail(anyString())).thenReturn(testUserResponse);
         when(dishPersistencePort.editDish(DISH_ID, testDish)).thenReturn(testDish);
 
-        // Act
         Dish result = dishUseCase.editDish(DISH_ID, testDish);
 
-        // Assert
         assertEquals(testDish, result);
         verify(dishPersistencePort, times(1)).editDish(DISH_ID, testDish);
     }
 
     @Test
     void testEditDish_WhenUserIsNotOwner_ShouldThrowException() {
-        // Arrange
+
         testRestaurant.setOwnerId(NON_EXISTENT_OWNER_ID);
         testDish.setRestaurant(testRestaurant);
 
         when(jwtService.extractUsername(anyString())).thenReturn(USER_EMAIL);
         when(userFeignClient.findByEmail(anyString())).thenReturn(testUserResponse);
 
-        // Act & Assert
         UserNotOwnerOfRestaurantException exception = assertThrows(UserNotOwnerOfRestaurantException.class, () -> {
             dishUseCase.editDish(DISH_ID, testDish);
         });
@@ -148,28 +133,22 @@ class DishUseCaseTest {
 
     @Test
     void testFindAllDishesByRestaurantId_ShouldReturnDishes() {
-        // Arrange
         List<Dish> dishes = List.of(testDish);
         when(dishPersistencePort.getAllDishesByRestaurantId(RESTAURANT_ID, PAGE_NUMBER, PAGE_SIZE)).thenReturn(dishes);
 
-        // Act
         List<Dish> result = dishUseCase.findAllDishesByRestaurantId(RESTAURANT_ID, PAGE_NUMBER, PAGE_SIZE);
 
-        // Assert
         assertEquals(dishes, result);
         verify(dishPersistencePort, times(1)).getAllDishesByRestaurantId(RESTAURANT_ID, PAGE_NUMBER, PAGE_SIZE);
     }
 
     @Test
     void testFindAllDishesByRestaurantIdByCategoryId_ShouldReturnDishes() {
-        // Arrange
         List<Dish> dishes = List.of(testDish);
         when(dishPersistencePort.getAllDishesByRestaurantIdByCategoryId(RESTAURANT_ID, CATEGORY_ID, PAGE_NUMBER, PAGE_SIZE)).thenReturn(dishes);
 
-        // Act
         List<Dish> result = dishUseCase.findAllDishesByRestaurantIdByCategoryId(RESTAURANT_ID, CATEGORY_ID, PAGE_NUMBER, PAGE_SIZE);
 
-        // Assert
         assertEquals(dishes, result);
         verify(dishPersistencePort, times(1)).getAllDishesByRestaurantIdByCategoryId(RESTAURANT_ID, CATEGORY_ID, PAGE_NUMBER, PAGE_SIZE);
     }

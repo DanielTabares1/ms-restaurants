@@ -30,13 +30,10 @@ class CategoryUseCaseTest {
 
     @Test
     void getCategoryById_ShouldReturnCategory_WhenCategoryExists() {
-        // Arrange
         when(categoryPersistencePort.getCategoryById(TestConstants.CATEGORY_ID)).thenReturn(Optional.of(TestConstants.CATEGORY));
 
-        // Act
         Category result = categoryUseCase.getCategoryById(TestConstants.CATEGORY_ID);
 
-        // Assert
         assertNotNull(result);
         assertEquals(TestConstants.CATEGORY_ID, result.getId());
         assertEquals(TestConstants.CATEGORY_NAME, result.getName());
@@ -44,10 +41,8 @@ class CategoryUseCaseTest {
 
     @Test
     void getCategoryById_ShouldThrowCategoryNotFoundException_WhenCategoryDoesNotExist() {
-        // Arrange
         when(categoryPersistencePort.getCategoryById(TestConstants.CATEGORY_ID)).thenReturn(Optional.empty());
 
-        // Act & Assert
         CategoryNotFoundException exception = assertThrows(
                 CategoryNotFoundException.class,
                 () -> categoryUseCase.getCategoryById(TestConstants.CATEGORY_ID)

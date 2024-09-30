@@ -8,6 +8,7 @@ import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.model.OrderDish;
 import com.daniel.ms_restaurants.domain.model.enums.OrderStatus;
+import com.daniel.ms_restaurants.domain.model.enums.UserRoles;
 import com.daniel.ms_restaurants.domain.spi.IEmployeeRestaurantPersistencePort;
 import com.daniel.ms_restaurants.domain.spi.IOrderDishPersistencePort;
 import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
@@ -43,6 +44,9 @@ public class OrderUseCase implements IOrderServicePort {
     @Override
     public Order createOrder(Order order) {
         UserResponse client = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
+        if(!Objects.equals(client.getRole().getName(), UserRoles.CLIENT.toString())){
+            throw new UserNotAClientException(ErrorMessages.USER_NOT_A_CLIENT.getMessage(client.getEmail()));
+        }
         order.setClientId(client.getId());
         List<Order> ordersOfClient = orderPersistencePort.getByClientId(client.getId());
         for (Order existingOrder : ordersOfClient) {
@@ -59,6 +63,10 @@ public class OrderUseCase implements IOrderServicePort {
     @Override
     public Order appendDish(Order order, Dish dish, int amount) {
         UserResponse client = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
+        if(!Objects.equals(client.getRole().getName(), UserRoles.CLIENT.toString())){
+            throw new UserNotAClientException(ErrorMessages.USER_NOT_A_CLIENT.getMessage(client.getEmail()));
+        }
+
         if (client.getId() != order.getClientId()) {
             throw new OrderNotBelongToClientException(ErrorMessages.ORDER_NOT_BELONG_TO_CLIENT.getMessage(order.getId(), client.getUsername()));
         }

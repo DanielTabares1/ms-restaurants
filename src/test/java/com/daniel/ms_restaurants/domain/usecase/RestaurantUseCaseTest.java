@@ -7,7 +7,7 @@ import com.daniel.ms_restaurants.domain.exception.ErrorMessages;
 import com.daniel.ms_restaurants.domain.exception.OwnerNotFoundException;
 import com.daniel.ms_restaurants.domain.exception.RestaurantNotFoundException;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
-import com.daniel.ms_restaurants.domain.spi.RestaurantPersistencePort;
+import com.daniel.ms_restaurants.domain.spi.IRestaurantPersistencePort;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class RestaurantUseCaseTest {
     private RestaurantUseCase restaurantUseCase;
 
     @Mock
-    private RestaurantPersistencePort restaurantPersistencePort;
+    private IRestaurantPersistencePort IRestaurantPersistencePort;
 
     @Mock
     private UserFeignClient userFeignClient;
@@ -55,21 +55,21 @@ class RestaurantUseCaseTest {
     }
 
     @Test
-    void shouldSaveRestaurantWhenOwnerExists() {
+    void saveRestaurant_ShouldSaveRestaurant_WhenOwnerExists() {
         // Arrange
         when(userFeignClient.getUserById(OWNER_ID)).thenReturn(ownerUser);
-        when(restaurantPersistencePort.saveRestaurant(any(Restaurant.class))).thenReturn(restaurant);
+        when(IRestaurantPersistencePort.saveRestaurant(any(Restaurant.class))).thenReturn(restaurant);
 
         // Act
         Restaurant result = restaurantUseCase.saveRestaurant(restaurant);
 
         // Assert
         assertNotNull(result);
-        verify(restaurantPersistencePort).saveRestaurant(any(Restaurant.class));
+        verify(IRestaurantPersistencePort).saveRestaurant(any(Restaurant.class));
     }
 
     @Test
-    void shouldThrowOwnerNotFoundExceptionWhenOwnerDoesNotExist() {
+    void saveRestaurant_ShouldThrowOwnerNotFoundException_WhenOwnerDoesNotExist() {
         // Arrange
         when(userFeignClient.getUserById(OWNER_ID)).thenReturn(null);
 
@@ -81,7 +81,7 @@ class RestaurantUseCaseTest {
     }
 
     @Test
-    void shouldThrowOwnerNotFoundExceptionWhenUserIsNotOwner() {
+    void saveRestaurant_ShouldThrowOwnerNotFoundException_WhenUserIsNotOwner() {
         // Arrange
         when(userFeignClient.getUserById(OWNER_ID)).thenReturn(clientUser);
 
@@ -93,23 +93,22 @@ class RestaurantUseCaseTest {
     }
 
     @Test
-    void shouldGetRestaurantByIdWhenExists() {
+    void houldGetRestaurantById_WhenExists() {
         // Arrange
-        when(restaurantPersistencePort.getRestaurantById(RESTAURANT_ID)).thenReturn(Optional.of(restaurant));
+        when(IRestaurantPersistencePort.getRestaurantById(RESTAURANT_ID)).thenReturn(Optional.of(restaurant));
 
         // Act
         Restaurant result = restaurantUseCase.getRestaurantById(RESTAURANT_ID);
-
         // Assert
         assertNotNull(result);
         assertEquals(restaurant, result);
-        verify(restaurantPersistencePort).getRestaurantById(RESTAURANT_ID);
+        verify(IRestaurantPersistencePort).getRestaurantById(RESTAURANT_ID);
     }
 
     @Test
-    void shouldThrowRestaurantNotFoundExceptionWhenRestaurantDoesNotExist() {
+    void getRestaurantById_ShouldThrowRestaurantNotFoundException_WhenRestaurantDoesNotExist() {
         // Arrange
-        when(restaurantPersistencePort.getRestaurantById(RESTAURANT_ID)).thenReturn(Optional.empty());
+        when(IRestaurantPersistencePort.getRestaurantById(RESTAURANT_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
         RestaurantNotFoundException exception = assertThrows(RestaurantNotFoundException.class,

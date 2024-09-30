@@ -41,8 +41,8 @@ public class BeanConfig {
 
 
     @Bean
-    public RestaurantPersistencePort restaurantPersistencePort() {
-        return new RestaurantJpaAdapter(restaurantRepository, restaurantEntityMapper);
+    public IRestaurantPersistencePort restaurantPersistencePort() {
+        return new IRestaurantJpaAdapter(restaurantRepository, restaurantEntityMapper);
     }
 
     @Bean

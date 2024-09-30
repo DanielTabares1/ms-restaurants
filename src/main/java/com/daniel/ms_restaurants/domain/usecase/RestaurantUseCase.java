@@ -7,18 +7,18 @@ import com.daniel.ms_restaurants.domain.exception.OwnerNotFoundException;
 import com.daniel.ms_restaurants.domain.exception.RestaurantNotFoundException;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.domain.model.enums.UserRoles;
-import com.daniel.ms_restaurants.domain.spi.RestaurantPersistencePort;
+import com.daniel.ms_restaurants.domain.spi.IRestaurantPersistencePort;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 
 import java.util.List;
 
 public class RestaurantUseCase implements IRestaurantServicePort {
 
-    private final RestaurantPersistencePort restaurantPersistencePort;
+    private final IRestaurantPersistencePort IRestaurantPersistencePort;
     private final UserFeignClient userFeignClient;
 
-    public RestaurantUseCase(RestaurantPersistencePort restaurantPersistencePort, UserFeignClient userFeignClient) {
-        this.restaurantPersistencePort = restaurantPersistencePort;
+    public RestaurantUseCase(IRestaurantPersistencePort IRestaurantPersistencePort, UserFeignClient userFeignClient) {
+        this.IRestaurantPersistencePort = IRestaurantPersistencePort;
         this.userFeignClient = userFeignClient;
     }
 
@@ -28,18 +28,18 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         if (owner == null || !owner.getRole().getName().equals(UserRoles.OWNER.toString())) {
             throw new OwnerNotFoundException(ErrorMessages.OWNER_NOT_FOUND.getMessage());
         }
-        return restaurantPersistencePort.saveRestaurant(restaurant);
+        return IRestaurantPersistencePort.saveRestaurant(restaurant);
     }
 
     @Override
     public Restaurant getRestaurantById(long id) {
-        return restaurantPersistencePort.getRestaurantById(id).orElseThrow(
+        return IRestaurantPersistencePort.getRestaurantById(id).orElseThrow(
                 () -> new RestaurantNotFoundException(ErrorMessages.RESTAURANT_NOT_FOUND.getMessage(id))
         );
     }
 
     @Override
     public List<Restaurant> getAllRestaurants(int pageNumber, int pageSize) {
-        return restaurantPersistencePort.getAllRestaurants(pageNumber, pageSize);
+        return IRestaurantPersistencePort.getAllRestaurants(pageNumber, pageSize);
     }
 }

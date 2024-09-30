@@ -48,7 +48,17 @@ public class TestConstants {
     public static final int PAGE_SIZE = 10;  // Tamaño de página, número de ítems por página
     public static final int PAGE_NUMBER = 0; // Primer página
 
+    public static final String OWNER_EMAIL = "owner@example.com";
 
+    public static final long EMPLOYEE_ID = 101L;
+    public static final String EMPLOYEE_NAME = "John";
+    public static final String EMPLOYEE_LAST_NAME = "Doe";
+    public static final String EMPLOYEE_DOCUMENT_NUMBER = "1234567890";
+    public static final String EMPLOYEE_PHONE = "+1234567890";
+    public static final String EMPLOYEE_EMAIL = "employee@example.com";
+    public static final String EMPLOYEE_PASSWORD = "password123";
+    public static final long EMPLOYEE_ROLE_ID = 2L;
+    public static final String EMPLOYEE_ROLE_NAME = "ROLE_EMPLOYEE";
 
     // Error Messages
 
