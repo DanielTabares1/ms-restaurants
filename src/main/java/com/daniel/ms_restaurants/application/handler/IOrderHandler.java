@@ -14,4 +14,5 @@ public interface IOrderHandler {
     Order editStatus(long orderId, String statusName);
     Order getById(long id);
     Order deliveryOrder(Order order, String code);
+    Order cancellOrder(Order order);
 }

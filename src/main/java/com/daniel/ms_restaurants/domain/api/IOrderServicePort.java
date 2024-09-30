@@ -22,4 +22,6 @@ public interface IOrderServicePort {
 
     Order deliverOrder(Order order, String code);
 
+    Order cancellOrder(Order order);
+
 }

@@ -67,5 +67,10 @@ public class OrderHandler implements IOrderHandler {
         return orderServicePort.deliverOrder(order, code);
     }
 
+    @Override
+    public Order cancellOrder(Order order) {
+        return orderServicePort.cancellOrder(order);
+    }
+
 
 }

@@ -137,7 +137,20 @@ public class OrderUseCase implements IOrderServicePort {
         if (!smsPersistencePort.validateCode(order.getId(), code)){
             throw new OrderDeliveryValidationCodeException(ErrorMessages.ORDER_DELIVERY_VALIDATION_CODE.getMessage());
         }
+        validateStatusTransition(order.getStatus(), OrderStatus.DELIVERED.toString());
         order.setStatus(OrderStatus.DELIVERED.toString());
+        orderPersistencePort.saveOrder(order);
+        return order;
+    }
+
+    @Override
+    public Order cancellOrder(Order order) {
+        UserResponse client = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
+        if (client.getId() != order.getClientId()) {
+            throw new OrderNotBelongToClientException(ErrorMessages.ORDER_NOT_BELONG_TO_CLIENT.getMessage(order.getId(), client.getUsername()));
+        }
+        validateStatusTransition(order.getStatus(), OrderStatus.CANCELLED.toString());
+        order.setStatus(OrderStatus.CANCELLED.toString());
         orderPersistencePort.saveOrder(order);
         return order;
     }
@@ -166,4 +179,6 @@ public class OrderUseCase implements IOrderServicePort {
                 throw new InvalidOrderStatusTransitionException(ErrorMessages.INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM.getMessage(currentStatus));
         }
     }
+
+
 }

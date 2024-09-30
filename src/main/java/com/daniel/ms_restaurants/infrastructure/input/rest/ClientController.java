@@ -13,6 +13,7 @@ import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
 import com.daniel.ms_restaurants.infrastructure.input.rest.constants.ApiEndpoints;
+import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.OrderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,6 +85,13 @@ public class ClientController {
         Order order = orderHandler.appendDish(orderId, dishId, amount);
         OrderResponse orderResponse = orderResponseMapper.toResponse(order);
         return new ResponseEntity<>(orderResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/order/cancell/{orderId}")
+    public ResponseEntity<OrderResponse> cancellOrder(@PathVariable long orderId){
+        Order order = orderHandler.getById(orderId);
+        Order editedOrder = orderHandler.cancellOrder(order);
+        return new ResponseEntity<>(orderResponseMapper.toResponse(editedOrder), HttpStatus.OK);
     }
 
 }
