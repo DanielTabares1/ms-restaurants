@@ -1,5 +1,6 @@
 package com.daniel.ms_restaurants.infrastructure.config.controlleradvice;
 
+import com.daniel.ms_restaurants.domain.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -38,4 +39,19 @@ public class BadRequestControllerAdvice {
         errors.put("Message", ex.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({
+            InvalidOrderStatusTransitionException.class,
+            OrderAndDishNotBelongToTheSameRestaurant.class,
+            OrderDeliveryValidationCodeException.class,
+            OrderNotBelongToClientException.class,
+            UserAlreadyHaveAnOrderActive.class,
+            UserNotOwnerOfRestaurantException.class
+    })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleBadRequestExceptions(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+
 }
