@@ -57,5 +57,15 @@ public class OrderHandler implements IOrderHandler {
         return orderServicePort.setStatus(orderId, statusName);
     }
 
+    @Override
+    public Order getById(long id) {
+        return orderServicePort.getById(id);
+    }
+
+    @Override
+    public Order deliveryOrder(Order order, String code) {
+        return orderServicePort.deliverOrder(order, code);
+    }
+
 
 }

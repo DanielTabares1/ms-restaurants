@@ -44,5 +44,11 @@ public class EmployeeController {
         return new ResponseEntity<>(orderResponseMapper.toResponse(editedOrder), HttpStatus.OK);
     }
 
+    @PutMapping("/orders/deliver-order")
+    public ResponseEntity<OrderResponse> deliverOrder(@RequestParam long orderId, @RequestParam String validationCode) {
+        Order existingOrder = orderHandler.getById(orderId);
+        Order newOrder = orderHandler.deliveryOrder(existingOrder, validationCode);
+        return new ResponseEntity<>(orderResponseMapper.toResponse(newOrder), HttpStatus.OK);
+    }
 
 }

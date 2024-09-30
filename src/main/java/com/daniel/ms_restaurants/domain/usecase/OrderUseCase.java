@@ -97,9 +97,8 @@ public class OrderUseCase implements IOrderServicePort {
 
     @Override
     public List<Order> getByRestaurantIdAndByStatus(String status) {
-        long restaurantId = employeeRestaurantPersistencePort.getByEmployeeEmail(
-                jwtService.extractUsername(JwtTokenHolder.getToken())
-        ).getId();
+        String employeeEmail = jwtService.extractUsername(JwtTokenHolder.getToken());
+        long restaurantId = employeeRestaurantPersistencePort.getByEmployeeEmail(employeeEmail).getId();
         return orderPersistencePort.getByRestaurantIdAndStatus(restaurantId, status);
     }
 
@@ -123,11 +122,22 @@ public class OrderUseCase implements IOrderServicePort {
         order.setStatus(status);
         if (Objects.equals(status, OrderStatus.READY.toString())) {
             smsPersistencePort.sendSms(
+                    orderId,
                     order.getRestaurant().getName(),
                     userFeignClient.findUserById(order.getClientId()).getName(),
                     (random.nextInt(900000) + 100000) + ""
             );
         }
+        orderPersistencePort.saveOrder(order);
+        return order;
+    }
+
+    @Override
+    public Order deliverOrder(Order order, String code) {
+        if (!smsPersistencePort.validateCode(order.getId(), code)){
+            throw new OrderDeliveryValidationCodeException(ErrorMessages.ORDER_DELIVERY_VALIDATION_CODE.getMessage());
+        }
+        order.setStatus(OrderStatus.DELIVERED.toString());
         orderPersistencePort.saveOrder(order);
         return order;
     }

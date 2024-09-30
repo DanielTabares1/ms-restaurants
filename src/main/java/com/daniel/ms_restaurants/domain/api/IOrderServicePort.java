@@ -19,4 +19,7 @@ public interface IOrderServicePort {
     Order assignEmployee(long orderId);
 
     Order setStatus(long orderId, String status);
+
+    Order deliverOrder(Order order, String code);
+
 }

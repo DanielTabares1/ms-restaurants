@@ -23,6 +23,8 @@ public class EmployeeRestaurantJpaAdapter implements IEmployeeRestaurantPersiste
     @Override
     public EmployeeRestaurant getByEmployeeEmail(String employeeEmail) {
         return employeeRestaurantEntityMapper.toModel(
+                //todo ojo que esto retorna null
                 employeeRestaurantRepository.findByEmployeeEmail(employeeEmail));
+
     }
 }

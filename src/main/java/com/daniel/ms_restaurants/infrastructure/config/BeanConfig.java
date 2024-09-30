@@ -47,7 +47,7 @@ public class BeanConfig {
 
     @Bean
     public IRestaurantServicePort restaurantServicePort() {
-        return new IRestaurantUseCase(restaurantPersistencePort(), userFeignClient);
+        return new RestaurantUseCase(restaurantPersistencePort(), userFeignClient);
     }
 
 

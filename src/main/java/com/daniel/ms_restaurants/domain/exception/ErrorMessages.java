@@ -27,7 +27,8 @@ public enum ErrorMessages {
 
     // Order status transition related errors
     INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM_TO("Invalid transition from %s to %s"),
-    INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM("Invalid transition from %s");
+    INVALID_ORDER_STATUS_TRANSITION_EXCEPTION_FROM("Invalid transition from %s"),
+    ORDER_DELIVERY_VALIDATION_CODE("The validation code is incorrect");
 
 
     private final String message;

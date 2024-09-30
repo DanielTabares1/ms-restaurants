@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class OrderMessage {
+    private long orderId;
     private String clientPhoneNumber;
     private String restaurantName;
     private String orderValidationCode;

@@ -11,12 +11,18 @@ public class SmsClientAdapter implements ISmsPersistencePort {
     private final SmsFeignClient smsFeignClient;
 
     @Override
-    public void sendSms(String restaurantName, String clientPhoneNumber, String secureCode) {
+    public void sendSms(long orderId, String restaurantName, String clientPhoneNumber, String secureCode) {
         smsFeignClient.sendSms(new OrderMessage(
                 //clientPhoneNumber,
+                orderId,
                 "+573222574446",
                 restaurantName,
                 secureCode
         ));
+    }
+
+    @Override
+    public boolean validateCode(long orderId, String code) {
+        return smsFeignClient.validateCode(orderId, code);
     }
 }

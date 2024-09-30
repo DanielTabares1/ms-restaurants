@@ -12,12 +12,12 @@ import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 
 import java.util.List;
 
-public class IRestaurantUseCase implements IRestaurantServicePort {
+public class RestaurantUseCase implements IRestaurantServicePort {
 
     private final RestaurantPersistencePort restaurantPersistencePort;
     private final UserFeignClient userFeignClient;
 
-    public IRestaurantUseCase(RestaurantPersistencePort restaurantPersistencePort, UserFeignClient userFeignClient) {
+    public RestaurantUseCase(RestaurantPersistencePort restaurantPersistencePort, UserFeignClient userFeignClient) {
         this.restaurantPersistencePort = restaurantPersistencePort;
         this.userFeignClient = userFeignClient;
     }
