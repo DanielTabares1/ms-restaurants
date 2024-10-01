@@ -1,6 +1,7 @@
 package com.daniel.ms_restaurants.domain.usecase;
 
 import com.daniel.ms_restaurants.application.dto.TraceabilityRequest;
+import com.daniel.ms_restaurants.domain.exception.OrderNotEndedException;
 import com.daniel.ms_restaurants.domain.model.UserResponse;
 import com.daniel.ms_restaurants.domain.api.IJwtServicePort;
 import com.daniel.ms_restaurants.domain.api.ITraceabilityServicePort;
@@ -9,6 +10,7 @@ import com.daniel.ms_restaurants.domain.exception.OrderNotBelongToClientExceptio
 import com.daniel.ms_restaurants.domain.exception.OrderNotFoundException;
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.model.TraceabilityResponse;
+import com.daniel.ms_restaurants.domain.model.enums.OrderStatus;
 import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
 import com.daniel.ms_restaurants.domain.spi.ITraceabilityPersistencePort;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
@@ -51,4 +53,35 @@ public class TraceabilityUseCase implements ITraceabilityServicePort {
 
         return traceabilityPersistencePort.addTraceability(traceabilityRequest);
     }
+
+    @Override
+    public long getEfficiency(long orderId) {
+        List<TraceabilityResponse> traceabilityResponseList = traceabilityPersistencePort.getTraceabilityByOrderId(orderId);
+        TraceabilityResponse first = traceabilityResponseList.getFirst();
+        TraceabilityResponse last = traceabilityResponseList.getLast();
+
+        if (first.getNewState().equals(OrderStatus.PENDING.toString()) &&
+                last.getNewState().equals(OrderStatus.DELIVERED.toString())
+        ) {
+            return last.getDate().getTime() - first.getDate().getTime();
+        } else {
+            throw new OrderNotEndedException(ErrorMessages.ORDER_NOT_ENDED.getMessage(orderId));
+        }
+    }
+
+    @Override
+    public String getFormattedEfficiency(long orderId) {
+        return formatTimeInMillis(getEfficiency(orderId));
+    }
+
+    private String formatTimeInMillis(long timeInMillis) {
+        long diffInSeconds = timeInMillis / 1000;
+        long diffInMinutes = diffInSeconds / 60;
+        long diffInHours = diffInMinutes / 60;
+        long diffInDays = diffInHours / 24;
+
+        return diffInDays + " Days, " + diffInHours + " Hours, " +
+                diffInMinutes + " Minutes, " + diffInSeconds + " Seconds";
+    }
+
 }

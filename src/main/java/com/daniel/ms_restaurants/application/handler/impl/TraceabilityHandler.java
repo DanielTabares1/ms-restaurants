@@ -29,4 +29,14 @@ public class TraceabilityHandler implements ITraceabilityHandler {
     public TraceabilityResponse addTraceability(Order order,  String newStatus) {
        return traceabilityServicePort.addTraceability(order, newStatus);
     }
+
+    @Override
+    public long getEfficiency(long orderId) {
+        return traceabilityServicePort.getEfficiency(orderId);
+    }
+
+    @Override
+    public String getFormattedEfficiency(long orderId) {
+        return traceabilityServicePort.getFormattedEfficiency(orderId);
+    }
 }

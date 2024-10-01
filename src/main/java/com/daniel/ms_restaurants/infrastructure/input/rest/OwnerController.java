@@ -5,6 +5,8 @@ import com.daniel.ms_restaurants.application.dto.EditDishRequest;
 import com.daniel.ms_restaurants.application.dto.ToggleActivationToDishRequest;
 import com.daniel.ms_restaurants.application.handler.IDishHandler;
 import com.daniel.ms_restaurants.application.handler.IEmployeeRestaurantHandler;
+import com.daniel.ms_restaurants.application.handler.IOrderHandler;
+import com.daniel.ms_restaurants.application.handler.ITraceabilityHandler;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.EmployeeRestaurant;
 import com.daniel.ms_restaurants.infrastructure.input.rest.constants.ApiEndpoints;
@@ -24,9 +26,11 @@ public class OwnerController {
 
     private final IDishHandler dishHandler;
     private final IEmployeeRestaurantHandler employeeRestaurantHandler;
+    private final ITraceabilityHandler traceabilityHandler;
+    private final IOrderHandler orderHandler;
 
     @PostMapping("/employee")
-    public ResponseEntity<EmployeeRestaurant> assignEmployee(@RequestBody EmployeeRestaurant employeeRestaurant){
+    public ResponseEntity<EmployeeRestaurant> assignEmployee(@RequestBody EmployeeRestaurant employeeRestaurant) {
         EmployeeRestaurant savedEmployeeRestaurant = employeeRestaurantHandler.saveEmployee(employeeRestaurant);
         return new ResponseEntity<>(savedEmployeeRestaurant, HttpStatus.CREATED);
     }
@@ -41,7 +45,7 @@ public class OwnerController {
     })
     public ResponseEntity<Dish> createDish(
             @Valid @RequestBody CreateDishRequest dishRequest
-    ){
+    ) {
         Dish newDish = dishHandler.saveDish(dishRequest);
         return new ResponseEntity<>(newDish, HttpStatus.CREATED);
     }
@@ -58,7 +62,7 @@ public class OwnerController {
     public ResponseEntity<Dish> editDish(
             @Valid @PathVariable Long id,
             @Valid @RequestBody EditDishRequest dishRequest
-    ){
+    ) {
         Dish editedDish = dishHandler.editDish(id, dishRequest);
         return new ResponseEntity<>(editedDish, HttpStatus.OK);
     }
@@ -75,9 +79,19 @@ public class OwnerController {
     public ResponseEntity<Dish> toggleActivated(
             @Valid @PathVariable Long id,
             @Valid @RequestBody ToggleActivationToDishRequest request
-    ){
+    ) {
         Dish editedDish = dishHandler.toggleActivation(id, request);
         return new ResponseEntity<>(editedDish, HttpStatus.OK);
+    }
+
+    @GetMapping("/order/get-efficiency/{orderId}")
+    public ResponseEntity<String> getEfficiency(@PathVariable long orderId) {
+        return new ResponseEntity<>(traceabilityHandler.getFormattedEfficiency(orderId), HttpStatus.OK);
+    }
+
+    @GetMapping("/order/get-efficiency/by-employee-id/{employeeId}")
+    public ResponseEntity<String> getEfficiencyByEmployee(@PathVariable long employeeId){
+        return new ResponseEntity<>(orderHandler.getFormattedEfficiencyOfEmployee(employeeId), HttpStatus.OK);
     }
 
 }

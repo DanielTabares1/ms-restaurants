@@ -15,4 +15,7 @@ public interface IOrderPersistencePort {
     List<Order> getByClientId(long clientId);
 
     List<Order> getByRestaurantIdAndStatus(long restaurantId, String status);
+
+    List<Order> getAllByEmployeeIdByStatus(long orderId, String status);
+
 }

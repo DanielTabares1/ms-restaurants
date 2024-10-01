@@ -15,4 +15,6 @@ public interface IOrderHandler {
     Order getById(long id);
     Order deliveryOrder(Order order, String code);
     Order cancellOrder(Order order);
+    long getEfficiencyByEmployeeId(long employeeId);
+    String getFormattedEfficiencyOfEmployee(long employeeId);
 }

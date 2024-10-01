@@ -8,4 +8,6 @@ import java.util.List;
 public interface ITraceabilityHandler {
     List<TraceabilityResponse> getTraceabilityByOrderId(long orderId);
     TraceabilityResponse addTraceability(Order order, String newStatus);
+    long getEfficiency(long orderId);
+    String getFormattedEfficiency(long orderId);
 }

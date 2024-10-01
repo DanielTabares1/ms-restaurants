@@ -2,7 +2,6 @@ package com.daniel.ms_restaurants.infrastructure.output.jpa.adapter;
 
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
-import com.daniel.ms_restaurants.domain.exception.OrderNotFoundException;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.OrderEntity;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.IOrderEntityMapper;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.IOrderRepository;
@@ -51,6 +50,14 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
     public List<Order> getByRestaurantIdAndStatus(long restaurantId, String status) {
         List<OrderEntity> orderEntities = orderRepository.findByRestaurantIdAndStatus(restaurantId, status);
         return orderEntities.stream().map(
+                orderEntityMapper::toModel
+        ).toList();
+    }
+
+    @Override
+    public List<Order> getAllByEmployeeIdByStatus(long employeeId, String status) {
+        List<OrderEntity> orderEntityList = orderRepository.findByChefIdAndStatus(employeeId, status);
+        return orderEntityList.stream().map(
                 orderEntityMapper::toModel
         ).toList();
     }

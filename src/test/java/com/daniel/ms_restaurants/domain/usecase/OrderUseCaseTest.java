@@ -7,10 +7,7 @@ import com.daniel.ms_restaurants.domain.exception.*;
 import com.daniel.ms_restaurants.domain.model.*;
 import com.daniel.ms_restaurants.domain.model.enums.OrderStatus;
 import com.daniel.ms_restaurants.domain.model.enums.UserRoles;
-import com.daniel.ms_restaurants.domain.spi.IEmployeeRestaurantPersistencePort;
-import com.daniel.ms_restaurants.domain.spi.IOrderDishPersistencePort;
-import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
-import com.daniel.ms_restaurants.domain.spi.ISmsPersistencePort;
+import com.daniel.ms_restaurants.domain.spi.*;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtTokenHolder;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +35,8 @@ class OrderUseCaseTest {
     private IJwtServicePort jwtService;
     @Mock
     private IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort;
+    @Mock
+    private ITraceabilityPersistencePort traceabilityPersistencePort;
 
     @InjectMocks
     private OrderUseCase orderUseCase;
@@ -61,7 +60,7 @@ class OrderUseCaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        orderUseCase = new OrderUseCase(orderPersistencePort, orderDishPersistencePort, userFeignClient, smsPersistencePort, jwtService, employeeRestaurantPersistencePort);
+        orderUseCase = new OrderUseCase(orderPersistencePort, orderDishPersistencePort, userFeignClient, smsPersistencePort, jwtService, employeeRestaurantPersistencePort, traceabilityPersistencePort);
 
         // Setup JwtTokenHolder mock
         JwtTokenHolder.setToken(JWT_TOKEN);

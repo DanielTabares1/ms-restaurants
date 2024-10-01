@@ -1,13 +1,10 @@
 package com.daniel.ms_restaurants.domain.usecase;
 
 import com.daniel.ms_restaurants.application.dto.TraceabilityRequest;
-import com.daniel.ms_restaurants.domain.model.UserResponse;
+import com.daniel.ms_restaurants.domain.model.*;
 import com.daniel.ms_restaurants.domain.api.IJwtServicePort;
 import com.daniel.ms_restaurants.domain.api.IOrderServicePort;
 import com.daniel.ms_restaurants.domain.exception.*;
-import com.daniel.ms_restaurants.domain.model.Dish;
-import com.daniel.ms_restaurants.domain.model.Order;
-import com.daniel.ms_restaurants.domain.model.OrderDish;
 import com.daniel.ms_restaurants.domain.model.enums.OrderStatus;
 import com.daniel.ms_restaurants.domain.model.enums.UserRoles;
 import com.daniel.ms_restaurants.domain.spi.*;
@@ -191,6 +188,50 @@ public class OrderUseCase implements IOrderServicePort {
         order.setStatus(OrderStatus.CANCELLED.toString());
         orderPersistencePort.saveOrder(order);
         return order;
+    }
+
+    @Override
+    public long getEfficiencyOfEmployee(long employeeId) {
+        List<Order> orderList = orderPersistencePort.getAllByEmployeeIdByStatus(employeeId, OrderStatus.DELIVERED.toString());
+
+        if (orderList.isEmpty()) {
+            return 0;
+        }
+
+        long sumOfTime = orderList.stream()
+                .mapToLong(this::getDeliveryTime)
+                .sum();
+
+        return sumOfTime / orderList.size();
+    }
+
+    @Override
+    public String getFormattedEfficiencyOfEmployee(long employeeId) {
+        return formatTimeInMillis(getEfficiencyOfEmployee(employeeId));
+    }
+
+    private String formatTimeInMillis(long timeInMillis) {
+        long diffInSeconds = timeInMillis / 1000;
+        long diffInMinutes = diffInSeconds / 60;
+        long diffInHours = diffInMinutes / 60;
+        long diffInDays = diffInHours / 24;
+
+        return diffInDays + " Days, " + diffInHours + " Hours, " +
+                diffInMinutes + " Minutes, " + diffInSeconds + " Seconds";
+    }
+
+
+    private long getDeliveryTime(Order order) {
+        List<TraceabilityResponse> traceabilityResponseList = traceabilityPersistencePort.getTraceabilityByOrderId(order.getId());
+        TraceabilityResponse first = traceabilityResponseList.getFirst();
+        TraceabilityResponse last = traceabilityResponseList.getLast();
+
+        if (first.getNewState().equals(OrderStatus.PENDING.toString()) &&
+                last.getNewState().equals(OrderStatus.DELIVERED.toString())
+        ) {
+            return last.getDate().getTime() - first.getDate().getTime();
+        }
+        return 0;
     }
 
     private void validateStatusTransition(String currentStatus, String newStatus) {

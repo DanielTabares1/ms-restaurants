@@ -24,4 +24,8 @@ public interface IOrderServicePort {
 
     Order cancellOrder(Order order);
 
+    long getEfficiencyOfEmployee(long employeeId);
+
+    String getFormattedEfficiencyOfEmployee(long employeeId);
+
 }

@@ -21,6 +21,8 @@ public enum ErrorMessages {
     ORDER_NOT_BELONG_TO_CLIENT("Order with ID: %d does not belong to client with email: %s"),
     ORDER_AND_DISH_NOT_BELONG_TO_SAME_RESTAURANT("Order and dish do not belong to the same restaurant"),
     ORDER_DISH_NOT_FOUND("Order dish not found with ID: %d"),
+    ORDER_NOT_ENDED("Order not ended with ID: %d"),
+
 
     // Category-related errors
     CATEGORY_NOT_FOUND("Category not found with ID: %d"),

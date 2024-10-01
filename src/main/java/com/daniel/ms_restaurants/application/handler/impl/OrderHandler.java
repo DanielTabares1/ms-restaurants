@@ -72,5 +72,14 @@ public class OrderHandler implements IOrderHandler {
         return orderServicePort.cancellOrder(order);
     }
 
+    @Override
+    public long getEfficiencyByEmployeeId(long employeeId) {
+        return orderServicePort.getEfficiencyOfEmployee(employeeId);
+    }
+
+    @Override
+    public String getFormattedEfficiencyOfEmployee(long employeeId) {
+        return orderServicePort.getFormattedEfficiencyOfEmployee(employeeId);
+    }
 
 }
