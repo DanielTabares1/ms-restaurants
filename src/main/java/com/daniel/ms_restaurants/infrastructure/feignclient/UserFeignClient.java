@@ -1,6 +1,6 @@
 package com.daniel.ms_restaurants.infrastructure.feignclient;
 
-import com.daniel.ms_restaurants.application.dto.UserResponse;
+import com.daniel.ms_restaurants.domain.model.UserResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserFeignClient {
 
     @GetMapping("/api/v1/admin/users/{id}")
-    UserResponse getUserById(@PathVariable("id") long id);
+    UserResponse adminGetUserById(@PathVariable("id") long id);
 
     @GetMapping("/api/v1/employee/users/{id}")
-    UserResponse findUserById(@PathVariable("id") long id);
+    UserResponse employeeFindUserById(@PathVariable("id") long id);
+
+    @GetMapping("/api/v1/client/users/{id}")
+    UserResponse clientFindUserById(@PathVariable("id") long id);
 
     @GetMapping("/api/v1/admin/users/by-email/{email}")
     UserResponse getUserByEmail(@PathVariable("email") String email);

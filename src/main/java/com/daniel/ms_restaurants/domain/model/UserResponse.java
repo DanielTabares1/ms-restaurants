@@ -1,5 +1,6 @@
-package com.daniel.ms_restaurants.application.dto;
+package com.daniel.ms_restaurants.domain.model;
 
+import com.daniel.ms_restaurants.application.dto.RoleResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -2,7 +2,7 @@ package com.daniel.ms_restaurants.application.handler;
 
 import com.daniel.ms_restaurants.domain.api.IUserClientPort;
 import com.daniel.ms_restaurants.application.dto.RoleResponse;
-import com.daniel.ms_restaurants.application.dto.UserResponse;
+import com.daniel.ms_restaurants.domain.model.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

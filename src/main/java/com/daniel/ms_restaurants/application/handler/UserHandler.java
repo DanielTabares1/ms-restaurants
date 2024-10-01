@@ -1,7 +1,7 @@
 package com.daniel.ms_restaurants.application.handler;
 
 import com.daniel.ms_restaurants.domain.api.IUserClientPort;
-import com.daniel.ms_restaurants.application.dto.UserResponse;
+import com.daniel.ms_restaurants.domain.model.UserResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

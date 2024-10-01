@@ -1,6 +1,6 @@
 package com.daniel.ms_restaurants.domain.usecase;
 
-import com.daniel.ms_restaurants.application.dto.UserResponse;
+import com.daniel.ms_restaurants.domain.model.UserResponse;
 import com.daniel.ms_restaurants.domain.api.IEmployeeRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.api.IJwtServicePort;
 import com.daniel.ms_restaurants.domain.exception.ErrorMessages;

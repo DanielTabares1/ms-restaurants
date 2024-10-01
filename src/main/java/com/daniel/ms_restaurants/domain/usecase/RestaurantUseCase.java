@@ -1,6 +1,6 @@
 package com.daniel.ms_restaurants.domain.usecase;
 
-import com.daniel.ms_restaurants.application.dto.UserResponse;
+import com.daniel.ms_restaurants.domain.model.UserResponse;
 import com.daniel.ms_restaurants.domain.api.IRestaurantServicePort;
 import com.daniel.ms_restaurants.domain.exception.ErrorMessages;
 import com.daniel.ms_restaurants.domain.exception.OwnerNotFoundException;
@@ -24,7 +24,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
 
     @Override
     public Restaurant saveRestaurant(Restaurant restaurant) {
-        UserResponse owner = userFeignClient.getUserById(restaurant.getOwnerId());
+        UserResponse owner = userFeignClient.adminGetUserById(restaurant.getOwnerId());
         if (owner == null || !owner.getRole().getName().equals(UserRoles.OWNER.toString())) {
             throw new OwnerNotFoundException(ErrorMessages.OWNER_NOT_FOUND.getMessage());
         }

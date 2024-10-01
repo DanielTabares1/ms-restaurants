@@ -4,7 +4,6 @@ import com.daniel.ms_restaurants.application.dto.OrderResponse;
 import com.daniel.ms_restaurants.application.handler.IOrderHandler;
 import com.daniel.ms_restaurants.application.mapper.IOrderResponseMapper;
 import com.daniel.ms_restaurants.domain.model.Order;
-import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
 import com.daniel.ms_restaurants.infrastructure.input.rest.constants.ApiEndpoints;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,19 +1,18 @@
 package com.daniel.ms_restaurants.infrastructure.input.rest;
 
-import com.daniel.ms_restaurants.application.dto.CreateOrderRequest;
-import com.daniel.ms_restaurants.application.dto.OrderResponse;
-import com.daniel.ms_restaurants.application.dto.RestaurantMenuResponse;
-import com.daniel.ms_restaurants.application.dto.RestaurantResponse;
+import com.daniel.ms_restaurants.application.dto.*;
 import com.daniel.ms_restaurants.application.handler.IDishHandler;
 import com.daniel.ms_restaurants.application.handler.IOrderHandler;
 import com.daniel.ms_restaurants.application.handler.IRestaurantHandler;
+import com.daniel.ms_restaurants.application.handler.ITraceabilityHandler;
 import com.daniel.ms_restaurants.application.mapper.IDishResponseMapper;
 import com.daniel.ms_restaurants.application.mapper.IOrderResponseMapper;
 import com.daniel.ms_restaurants.domain.model.Dish;
 import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.model.Restaurant;
+import com.daniel.ms_restaurants.domain.model.TraceabilityResponse;
+import com.daniel.ms_restaurants.domain.model.enums.OrderStatus;
 import com.daniel.ms_restaurants.infrastructure.input.rest.constants.ApiEndpoints;
-import com.daniel.ms_restaurants.infrastructure.output.jpa.entity.OrderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +30,7 @@ public class ClientController {
     private final IDishResponseMapper dishResponseMapper;
     private final IOrderHandler orderHandler;
     private final IOrderResponseMapper orderResponseMapper;
+    private final ITraceabilityHandler traceabilityHandler;
 
     @GetMapping("/dishes/{restaurantId}")
     public RestaurantMenuResponse getAllDishesByRestaurantId(
@@ -87,11 +87,18 @@ public class ClientController {
         return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/order/cancell/{orderId}")
-    public ResponseEntity<OrderResponse> cancellOrder(@PathVariable long orderId){
+    @PostMapping("/order/cancel/{orderId}")
+    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable long orderId){
         Order order = orderHandler.getById(orderId);
         Order editedOrder = orderHandler.cancellOrder(order);
+        traceabilityHandler.addTraceability(order, editedOrder.getStatus());
         return new ResponseEntity<>(orderResponseMapper.toResponse(editedOrder), HttpStatus.OK);
+    }
+
+    @GetMapping("/traceability/{orderId}")
+    public ResponseEntity<List<TraceabilityResponse>> getByOrderId(@PathVariable long orderId){
+        List<TraceabilityResponse> traceabilityResponseList = traceabilityHandler.getTraceabilityByOrderId(orderId);
+        return new ResponseEntity<>(traceabilityResponseList, HttpStatus.OK);
     }
 
 }

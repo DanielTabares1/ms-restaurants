@@ -1,6 +1,7 @@
 package com.daniel.ms_restaurants.domain.usecase;
 
-import com.daniel.ms_restaurants.application.dto.UserResponse;
+import com.daniel.ms_restaurants.application.dto.TraceabilityRequest;
+import com.daniel.ms_restaurants.domain.model.UserResponse;
 import com.daniel.ms_restaurants.domain.api.IJwtServicePort;
 import com.daniel.ms_restaurants.domain.api.IOrderServicePort;
 import com.daniel.ms_restaurants.domain.exception.*;
@@ -9,10 +10,7 @@ import com.daniel.ms_restaurants.domain.model.Order;
 import com.daniel.ms_restaurants.domain.model.OrderDish;
 import com.daniel.ms_restaurants.domain.model.enums.OrderStatus;
 import com.daniel.ms_restaurants.domain.model.enums.UserRoles;
-import com.daniel.ms_restaurants.domain.spi.IEmployeeRestaurantPersistencePort;
-import com.daniel.ms_restaurants.domain.spi.IOrderDishPersistencePort;
-import com.daniel.ms_restaurants.domain.spi.IOrderPersistencePort;
-import com.daniel.ms_restaurants.domain.spi.ISmsPersistencePort;
+import com.daniel.ms_restaurants.domain.spi.*;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import com.daniel.ms_restaurants.infrastructure.security.jwt.JwtTokenHolder;
 
@@ -29,22 +27,24 @@ public class OrderUseCase implements IOrderServicePort {
     private final ISmsPersistencePort smsPersistencePort;
     private final IJwtServicePort jwtService;
     private final IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort;
+    private final ITraceabilityPersistencePort traceabilityPersistencePort;
 
     private static final SecureRandom random = new SecureRandom();
 
-    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IOrderDishPersistencePort orderDishPersistencePort, UserFeignClient userFeignClient, ISmsPersistencePort smsPersistencePort, IJwtServicePort jwtService, IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort) {
+    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IOrderDishPersistencePort orderDishPersistencePort, UserFeignClient userFeignClient, ISmsPersistencePort smsPersistencePort, IJwtServicePort jwtService, IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort, ITraceabilityPersistencePort traceabilityPersistencePort) {
         this.orderPersistencePort = orderPersistencePort;
         this.orderDishPersistencePort = orderDishPersistencePort;
         this.userFeignClient = userFeignClient;
         this.smsPersistencePort = smsPersistencePort;
         this.jwtService = jwtService;
         this.employeeRestaurantPersistencePort = employeeRestaurantPersistencePort;
+        this.traceabilityPersistencePort = traceabilityPersistencePort;
     }
 
     @Override
     public Order createOrder(Order order) {
         UserResponse client = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
-        if(!Objects.equals(client.getRole().getName(), UserRoles.CLIENT.toString())){
+        if (!Objects.equals(client.getRole().getName(), UserRoles.CLIENT.toString())) {
             throw new UserNotAClientException(ErrorMessages.USER_NOT_A_CLIENT.getMessage(client.getEmail()));
         }
         order.setClientId(client.getId());
@@ -57,13 +57,17 @@ public class OrderUseCase implements IOrderServicePort {
                 throw new UserAlreadyHaveAnOrderActive(ErrorMessages.USER_ALREADY_HAS_ACTIVE_ORDER.getMessage());
             }
         }
-        return orderPersistencePort.saveOrder(order);
+        Order newOrder = orderPersistencePort.saveOrder(order);
+        traceabilityPersistencePort.addTraceability(
+                new TraceabilityRequest(newOrder, client, null, OrderStatus.PENDING.toString())
+        );
+        return newOrder;
     }
 
     @Override
     public Order appendDish(Order order, Dish dish, int amount) {
         UserResponse client = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
-        if(!Objects.equals(client.getRole().getName(), UserRoles.CLIENT.toString())){
+        if (!Objects.equals(client.getRole().getName(), UserRoles.CLIENT.toString())) {
             throw new UserNotAClientException(ErrorMessages.USER_NOT_A_CLIENT.getMessage(client.getEmail()));
         }
 
@@ -116,7 +120,11 @@ public class OrderUseCase implements IOrderServicePort {
                 () -> new OrderNotFoundException(ErrorMessages.ORDER_NOT_FOUND.getMessage(orderId))
         );
         UserResponse employee = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
+        UserResponse client = userFeignClient.employeeFindUserById(order.getClientId());
         order.setChefId(employee.getId());
+        traceabilityPersistencePort.addTraceability(new TraceabilityRequest(
+                order, client, employee, OrderStatus.IN_PROGRESS.toString()
+        ));
         order.setStatus(OrderStatus.IN_PROGRESS.toString());
         return orderPersistencePort.saveOrder(order);
     }
@@ -127,12 +135,22 @@ public class OrderUseCase implements IOrderServicePort {
                 () -> new OrderNotFoundException(ErrorMessages.ORDER_NOT_FOUND.getMessage(orderId))
         );
         validateStatusTransition(order.getStatus(), status);
+
+        UserResponse client = userFeignClient.employeeFindUserById(order.getClientId());
+        UserResponse employee = userFeignClient.employeeFindUserById(order.getChefId());
+
+
+        traceabilityPersistencePort.addTraceability(
+                new TraceabilityRequest(order, client, employee, OrderStatus.READY.toString())
+        );
+
         order.setStatus(status);
+
         if (Objects.equals(status, OrderStatus.READY.toString())) {
             smsPersistencePort.sendSms(
                     orderId,
                     order.getRestaurant().getName(),
-                    userFeignClient.findUserById(order.getClientId()).getName(),
+                    userFeignClient.employeeFindUserById(order.getClientId()).getName(),
                     (random.nextInt(900000) + 100000) + ""
             );
         }
@@ -142,10 +160,18 @@ public class OrderUseCase implements IOrderServicePort {
 
     @Override
     public Order deliverOrder(Order order, String code) {
-        if (!smsPersistencePort.validateCode(order.getId(), code)){
+        if (!smsPersistencePort.validateCode(order.getId(), code)) {
             throw new OrderDeliveryValidationCodeException(ErrorMessages.ORDER_DELIVERY_VALIDATION_CODE.getMessage());
         }
         validateStatusTransition(order.getStatus(), OrderStatus.DELIVERED.toString());
+
+        UserResponse client = userFeignClient.employeeFindUserById(order.getClientId());
+        UserResponse employee = userFeignClient.employeeFindUserById(order.getChefId());
+
+        traceabilityPersistencePort.addTraceability(
+                new TraceabilityRequest(order, client, employee, OrderStatus.DELIVERED.toString())
+        );
+
         order.setStatus(OrderStatus.DELIVERED.toString());
         orderPersistencePort.saveOrder(order);
         return order;
@@ -154,10 +180,14 @@ public class OrderUseCase implements IOrderServicePort {
     @Override
     public Order cancellOrder(Order order) {
         UserResponse client = userFeignClient.findByEmail(jwtService.extractUsername(JwtTokenHolder.getToken()));
+        UserResponse employee = userFeignClient.clientFindUserById(order.getChefId());
         if (client.getId() != order.getClientId()) {
             throw new OrderNotBelongToClientException(ErrorMessages.ORDER_NOT_BELONG_TO_CLIENT.getMessage(order.getId(), client.getUsername()));
         }
         validateStatusTransition(order.getStatus(), OrderStatus.CANCELLED.toString());
+        traceabilityPersistencePort.addTraceability(
+                new TraceabilityRequest(order, client, employee, OrderStatus.CANCELLED.toString())
+        );
         order.setStatus(OrderStatus.CANCELLED.toString());
         orderPersistencePort.saveOrder(order);
         return order;

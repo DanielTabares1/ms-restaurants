@@ -4,8 +4,10 @@ import com.daniel.ms_restaurants.domain.api.*;
 import com.daniel.ms_restaurants.domain.spi.*;
 import com.daniel.ms_restaurants.domain.usecase.*;
 import com.daniel.ms_restaurants.infrastructure.feignclient.SmsFeignClient;
+import com.daniel.ms_restaurants.infrastructure.feignclient.TraceabilityFeignClient;
 import com.daniel.ms_restaurants.infrastructure.feignclient.UserFeignClient;
 import com.daniel.ms_restaurants.infrastructure.feignclient.adapter.SmsClientAdapter;
+import com.daniel.ms_restaurants.infrastructure.feignclient.adapter.TraceabilityClientAdapter;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.adapter.*;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.mapper.*;
 import com.daniel.ms_restaurants.infrastructure.output.jpa.repository.*;
@@ -38,6 +40,7 @@ public class BeanConfig {
     private final IJwtServicePort jwtServicePort;
     private final UserFeignClient userFeignClient;
     private final SmsFeignClient smsFeignClient;
+    private final TraceabilityFeignClient traceabilityFeignClient;
 
 
     @Bean
@@ -78,7 +81,7 @@ public class BeanConfig {
 
     @Bean
     public IOrderServicePort orderServicePort() {
-        return new OrderUseCase(orderPersistencePort(), orderDishPersistencePort(), userFeignClient, smsPersistencePort(), jwtServicePort, employeeRestaurantPersistencePort());
+        return new OrderUseCase(orderPersistencePort(), orderDishPersistencePort(), userFeignClient, smsPersistencePort(), jwtServicePort, employeeRestaurantPersistencePort(), traceabilityPersistencePort());
     }
 
     @Bean
@@ -99,6 +102,16 @@ public class BeanConfig {
     @Bean
     public ISmsPersistencePort smsPersistencePort() {
         return new SmsClientAdapter(smsFeignClient);
+    }
+
+    @Bean
+    public ITraceabilityPersistencePort traceabilityPersistencePort() {
+        return new TraceabilityClientAdapter(traceabilityFeignClient);
+    }
+
+    @Bean
+    public ITraceabilityServicePort traceabilityServicePort() {
+        return new TraceabilityUseCase(traceabilityPersistencePort(), jwtServicePort, userFeignClient, orderPersistencePort());
     }
 
 

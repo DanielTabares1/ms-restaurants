@@ -2,7 +2,7 @@ package com.daniel.ms_restaurants.domain.usecase;
 
 import com.daniel.ms_restaurants.TestConstants;
 import com.daniel.ms_restaurants.application.dto.RoleResponse;
-import com.daniel.ms_restaurants.application.dto.UserResponse;
+import com.daniel.ms_restaurants.domain.model.UserResponse;
 import com.daniel.ms_restaurants.domain.exception.ErrorMessages;
 import com.daniel.ms_restaurants.domain.exception.OwnerNotFoundException;
 import com.daniel.ms_restaurants.domain.exception.RestaurantNotFoundException;
@@ -57,7 +57,7 @@ class RestaurantUseCaseTest {
     @Test
     void saveRestaurant_ShouldSaveRestaurant_WhenOwnerExists() {
         // Arrange
-        when(userFeignClient.getUserById(OWNER_ID)).thenReturn(ownerUser);
+        when(userFeignClient.adminGetUserById(OWNER_ID)).thenReturn(ownerUser);
         when(IRestaurantPersistencePort.saveRestaurant(any(Restaurant.class))).thenReturn(restaurant);
 
         // Act
@@ -71,7 +71,7 @@ class RestaurantUseCaseTest {
     @Test
     void saveRestaurant_ShouldThrowOwnerNotFoundException_WhenOwnerDoesNotExist() {
         // Arrange
-        when(userFeignClient.getUserById(OWNER_ID)).thenReturn(null);
+        when(userFeignClient.adminGetUserById(OWNER_ID)).thenReturn(null);
 
         // Act & Assert
         OwnerNotFoundException exception = assertThrows(OwnerNotFoundException.class,
@@ -83,7 +83,7 @@ class RestaurantUseCaseTest {
     @Test
     void saveRestaurant_ShouldThrowOwnerNotFoundException_WhenUserIsNotOwner() {
         // Arrange
-        when(userFeignClient.getUserById(OWNER_ID)).thenReturn(clientUser);
+        when(userFeignClient.adminGetUserById(OWNER_ID)).thenReturn(clientUser);
 
         // Act & Assert
         OwnerNotFoundException exception = assertThrows(OwnerNotFoundException.class,

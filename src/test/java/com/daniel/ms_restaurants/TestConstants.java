@@ -1,10 +1,6 @@
 package com.daniel.ms_restaurants;
 
-import com.daniel.ms_restaurants.application.dto.RoleResponse;
-import com.daniel.ms_restaurants.application.dto.UserResponse;
-import com.daniel.ms_restaurants.domain.exception.ErrorMessages;
 import com.daniel.ms_restaurants.domain.model.Category;
-import com.daniel.ms_restaurants.domain.model.Restaurant;
 
 public class TestConstants {
 
