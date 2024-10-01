@@ -216,10 +216,13 @@ public class OrderUseCase implements IOrderServicePort {
         long diffInHours = diffInMinutes / 60;
         long diffInDays = diffInHours / 24;
 
-        return diffInDays + " Days, " + diffInHours + " Hours, " +
-                diffInMinutes + " Minutes, " + diffInSeconds + " Seconds";
-    }
+        long remainingHours = diffInHours % 24;
+        long remainingMinutes = diffInMinutes % 60;
+        long remainingSeconds = diffInSeconds % 60;
 
+        return "User average time to deliver an order is: " + diffInDays + " Days, " + remainingHours + " Hours, " +
+                remainingMinutes + " Minutes, " + remainingSeconds + " Seconds";
+    }
 
     private long getDeliveryTime(Order order) {
         List<TraceabilityResponse> traceabilityResponseList = traceabilityPersistencePort.getTraceabilityByOrderId(order.getId());

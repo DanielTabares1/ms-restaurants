@@ -80,8 +80,12 @@ public class TraceabilityUseCase implements ITraceabilityServicePort {
         long diffInHours = diffInMinutes / 60;
         long diffInDays = diffInHours / 24;
 
-        return diffInDays + " Days, " + diffInHours + " Hours, " +
-                diffInMinutes + " Minutes, " + diffInSeconds + " Seconds";
+        long remainingHours = diffInHours % 24;
+        long remainingMinutes = diffInMinutes % 60;
+        long remainingSeconds = diffInSeconds % 60;
+
+        return diffInDays + " Days, " + remainingHours + " Hours, " +
+                remainingMinutes + " Minutes, " + remainingSeconds + " Seconds";
     }
 
 }
