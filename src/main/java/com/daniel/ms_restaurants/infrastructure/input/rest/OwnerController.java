@@ -29,6 +29,13 @@ public class OwnerController {
     private final ITraceabilityHandler traceabilityHandler;
     private final IOrderHandler orderHandler;
 
+    @Operation(summary = "Assign an employee to a restaurant",
+            description = "Assigns an employee to a specific restaurant and returns the details of the assignment.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Employee assigned successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @PostMapping("/employee")
     public ResponseEntity<EmployeeRestaurant> assignEmployee(@RequestBody EmployeeRestaurant employeeRestaurant) {
         EmployeeRestaurant savedEmployeeRestaurant = employeeRestaurantHandler.saveEmployee(employeeRestaurant);
@@ -84,11 +91,25 @@ public class OwnerController {
         return new ResponseEntity<>(editedDish, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get order efficiency",
+            description = "Returns the formatted efficiency of a specific order.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Efficiency retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Order not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/order/get-efficiency/{orderId}")
     public ResponseEntity<String> getEfficiency(@PathVariable long orderId) {
         return new ResponseEntity<>(traceabilityHandler.getFormattedEfficiency(orderId), HttpStatus.OK);
     }
 
+    @Operation(summary = "Get efficiency by employee",
+            description = "Returns the formatted efficiency of an employee based on their orders.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Efficiency retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Employee not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/order/get-efficiency/by-employee-id/{employeeId}")
     public ResponseEntity<String> getEfficiencyByEmployee(@PathVariable long employeeId){
         return new ResponseEntity<>(orderHandler.getFormattedEfficiencyOfEmployee(employeeId), HttpStatus.OK);
