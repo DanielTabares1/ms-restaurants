@@ -60,8 +60,7 @@ public class TraceabilityUseCase implements ITraceabilityServicePort {
         TraceabilityResponse first = traceabilityResponseList.getFirst();
         TraceabilityResponse last = traceabilityResponseList.getLast();
 
-        if (first.getNewState().equals(OrderStatus.PENDING.toString()) &&
-                last.getNewState().equals(OrderStatus.DELIVERED.toString())
+        if (last.getNewState().equals(OrderStatus.DELIVERED.toString())
         ) {
             return last.getDate().getTime() - first.getDate().getTime();
         } else {

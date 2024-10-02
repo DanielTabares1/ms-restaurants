@@ -30,7 +30,7 @@ public class TraceabilityRequest {
         this.clientId = client.getId();
         this.clientEmail = client.getEmail();
         this.date = new Date();
-        if (!Objects.equals(order.getStatus(), OrderStatus.PENDING.toString())) {
+        if (!Objects.equals(newState, OrderStatus.PENDING.toString())) {
             this.previousState = order.getStatus();
         }
         this.newState = newState;
